@@ -1,20 +1,32 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const mongoose = require('mongoose');
 
-const CasesBatiment = sequelize.define('CasesBatiment', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
+const casesBatimentSchema = new mongoose.Schema({
+  batimentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Batiment',
+    required: true
   },
-  pos_x: {
-    type: DataTypes.INTEGER,
-    allowNull: false
+  positionX: {
+    type: Number,
+    required: true,
+    min: 0
   },
-  pos_y: {
-    type: DataTypes.INTEGER,
-    allowNull: false
+  positionY: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  type: {
+    type: String,
+    required: true,
+    enum: ['Entrée', 'Sortie', 'Production', 'Stockage', 'Vide']
   }
+}, {
+  timestamps: true
 });
 
-module.exports = CasesBatiment; 
+// Index pour optimiser les requêtes
+casesBatimentSchema.index({ batimentId: 1, positionX: 1, positionY: 1 }, { unique: true });
+casesBatimentSchema.index({ batimentId: 1, type: 1 });
+
+module.exports = mongoose.model('CasesBatiment', casesBatimentSchema); 

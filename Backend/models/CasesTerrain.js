@@ -1,24 +1,40 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const mongoose = require('mongoose');
 
-const CasesTerrain = sequelize.define('CasesTerrain', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
-  },
-  pos_x: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
-  pos_y: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
+const casesTerrainSchema = new mongoose.Schema({
   joueurId: {
-    type: DataTypes.UUID,
-    allowNull: false
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Joueur',
+    required: true
+  },
+  positionX: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  positionY: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  type: {
+    type: String,
+    required: true,
+    enum: ['Vide', 'Bâtiment', 'Ressource', 'Obstacle']
+  },
+  contenu: {
+    type: mongoose.Schema.Types.ObjectId,
+    refPath: 'contenuModel'
+  },
+  contenuModel: {
+    type: String,
+    enum: ['Batiment', 'Ressource']
   }
+}, {
+  timestamps: true
 });
 
-module.exports = CasesTerrain; 
+// Index pour optimiser les requêtes
+casesTerrainSchema.index({ joueurId: 1, positionX: 1, positionY: 1 }, { unique: true });
+casesTerrainSchema.index({ joueurId: 1, type: 1 });
+
+module.exports = mongoose.model('CasesTerrain', casesTerrainSchema); 

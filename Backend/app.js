@@ -1,8 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const sequelize = require('./config/database');
+const connectDB = require('./config/database');
 const joueurRoutes = require('./routes/joueurRoutes');
-const Joueur = require('./models/Joueur');
 
 const app = express();
 
@@ -19,7 +18,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.get('/', (req, res) => {
-  res.json({ message: 'Bienvenue sur l\'API' });
+  res.json({ message: 'Bienvenue sur l\'API BizTown' });
 });
 
 // Routes des joueurs (incluant l'authentification)
@@ -47,20 +46,10 @@ const startServer = async () => {
   try {
     console.log('=== DÉMARRAGE DU SERVEUR ===');
     
-    // Test de la connexion à la base de données
-    console.log('Test de la connexion à la base de données...');
-    await sequelize.authenticate();
-    console.log('Connexion à la base de données établie avec succès.');
-    
-    // Synchronisation de la base de données
-    console.log('Synchronisation de la base de données...');
-    await sequelize.sync({ alter: true });
-    console.log('Base de données synchronisée avec succès.');
-    
-    // Vérification des tables
-    console.log('Vérification des tables...');
-    const tables = await sequelize.getQueryInterface().showAllTables();
-    console.log('Tables disponibles:', tables);
+    // Connexion à MongoDB
+    console.log('Connexion à MongoDB...');
+    await connectDB();
+    console.log('Connexion à MongoDB établie avec succès.');
     
     app.listen(PORT, () => {
       console.log(`Serveur démarré sur le port ${PORT}`);

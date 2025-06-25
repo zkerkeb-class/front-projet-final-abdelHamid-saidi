@@ -1,28 +1,31 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const mongoose = require('mongoose');
 
-const Niveau = sequelize.define('Niveau', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
+const niveauSchema = new mongoose.Schema({
+  numero: {
+    type: Number,
+    required: true,
+    unique: true,
+    min: 1
   },
-  niveau: {
-    type: DataTypes.INTEGER,
-    allowNull: false
+  nom: {
+    type: String,
+    required: true,
+    trim: true
   },
-  rendement: {
-    type: DataTypes.FLOAT,
-    allowNull: false
+  description: {
+    type: String,
+    trim: true
   },
-  tempsConstruction: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
-  cout: {
-    type: DataTypes.FLOAT,
-    allowNull: false
+  coutAmelioration: {
+    type: Number,
+    required: true,
+    min: 0
   }
+}, {
+  timestamps: true
 });
 
-module.exports = Niveau; 
+// Index pour optimiser les requêtes
+niveauSchema.index({ numero: 1 });
+
+module.exports = mongoose.model('Niveau', niveauSchema); 

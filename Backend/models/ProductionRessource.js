@@ -1,28 +1,37 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const mongoose = require('mongoose');
 
-const ProductionRessource = sequelize.define('ProductionRessource', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
-  },
-  quantite: {
-    type: DataTypes.FLOAT,
-    allowNull: false
-  },
-  tempsProduction: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
+const productionRessourceSchema = new mongoose.Schema({
   niveauId: {
-    type: DataTypes.UUID,
-    allowNull: false
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Niveau',
+    required: true
   },
   recepteurId: {
-    type: DataTypes.UUID,
-    allowNull: false
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Ressource',
+    required: true
+  },
+  quantite: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  frequence: {
+    type: Number,
+    required: true,
+    min: 1,
+    default: 1 // en minutes
+  },
+  actif: {
+    type: Boolean,
+    default: true
   }
+}, {
+  timestamps: true
 });
 
-module.exports = ProductionRessource; 
+// Index pour optimiser les requêtes
+productionRessourceSchema.index({ niveauId: 1, recepteurId: 1 });
+productionRessourceSchema.index({ actif: 1 });
+
+module.exports = mongoose.model('ProductionRessource', productionRessourceSchema); 

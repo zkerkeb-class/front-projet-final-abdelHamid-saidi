@@ -1,24 +1,35 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const mongoose = require('mongoose');
 
-const Batiment = sequelize.define('Batiment', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
-  },
+const batimentSchema = new mongoose.Schema({
   nom: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true,
+    trim: true
   },
   type: {
-    type: DataTypes.ENUM('Bureau', 'Usine', 'Dépôt', 'Centrale', 'Marché', 'Atelier', 'Banque'),
-    allowNull: false
+    type: String,
+    required: true,
+    enum: ['Bureau', 'Usine', 'Dépôt', 'Centrale', 'Marché', 'Atelier', 'Banque']
   },
   plan: {
-    type: DataTypes.STRING,
-    allowNull: true
+    type: String,
+    trim: true
+  },
+  description: {
+    type: String,
+    trim: true
+  },
+  coutBase: {
+    type: Number,
+    required: true,
+    min: 0
   }
+}, {
+  timestamps: true
 });
 
-module.exports = Batiment; 
+// Index pour optimiser les requêtes
+batimentSchema.index({ type: 1 });
+batimentSchema.index({ nom: 1 });
+
+module.exports = mongoose.model('Batiment', batimentSchema); 

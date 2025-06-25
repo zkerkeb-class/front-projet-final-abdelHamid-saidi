@@ -1,34 +1,41 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const mongoose = require('mongoose');
 
-const Joueur = sequelize.define('Joueur', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
-  },
+const joueurSchema = new mongoose.Schema({
   pseudo: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    minlength: 3
   },
   email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    lowercase: true
   },
   motDePasseHash: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true
   },
   patrimoine: {
-    type: DataTypes.FLOAT,
-    defaultValue: 0
+    type: Number,
+    default: 0,
+    min: 0
   },
   classement: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
+    type: Number,
+    default: 0,
+    min: 0
   }
+}, {
+  timestamps: true
 });
 
-module.exports = Joueur; 
+// Index pour optimiser les requêtes
+joueurSchema.index({ email: 1 });
+joueurSchema.index({ pseudo: 1 });
+joueurSchema.index({ patrimoine: -1 }); // Pour le classement
+
+module.exports = mongoose.model('Joueur', joueurSchema); 

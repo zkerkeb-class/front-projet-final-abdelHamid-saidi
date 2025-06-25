@@ -13,7 +13,7 @@ exports.inscription = async (req, res) => {
       return res.status(400).json({ message: 'Tous les champs sont requis.' });
     }
 
-    const joueurExistant = await Joueur.findOne({ where: { email } });
+    const joueurExistant = await Joueur.findOne({ email });
     if (joueurExistant) {
       console.log('Email déjà utilisé:', email);
       return res.status(400).json({ message: 'Email déjà utilisé.' });
@@ -23,7 +23,7 @@ exports.inscription = async (req, res) => {
     const hash = await bcrypt.hash(motDePasse, 10);
     
     console.log('Création du nouveau joueur');
-    const joueur = await Joueur.create({ 
+    const joueur = new Joueur({ 
       pseudo, 
       email, 
       motDePasseHash: hash,
@@ -31,9 +31,11 @@ exports.inscription = async (req, res) => {
       classement: 0
     });
 
-    console.log('Joueur créé avec succès:', { id: joueur.id, pseudo: joueur.pseudo });
+    await joueur.save();
+
+    console.log('Joueur créé avec succès:', { id: joueur._id, pseudo: joueur.pseudo });
     const token = jwt.sign(
-      { id: joueur.id, email: joueur.email }, 
+      { id: joueur._id, email: joueur.email }, 
       process.env.JWT_SECRET, 
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
@@ -42,7 +44,7 @@ exports.inscription = async (req, res) => {
       message: 'Inscription réussie',
       token,
       joueur: { 
-        id: joueur.id, 
+        id: joueur._id, 
         pseudo: joueur.pseudo, 
         email: joueur.email,
         patrimoine: joueur.patrimoine,
@@ -71,7 +73,7 @@ exports.connexion = async (req, res) => {
     }
 
     console.log('Recherche du joueur dans la base de données...');
-    const joueur = await Joueur.findOne({ where: { email } });
+    const joueur = await Joueur.findOne({ email });
     console.log('Résultat de la recherche:', joueur ? 'Joueur trouvé' : 'Joueur non trouvé');
     
     if (!joueur) {
@@ -91,7 +93,7 @@ exports.connexion = async (req, res) => {
 
     console.log('Connexion réussie pour:', email);
     const token = jwt.sign(
-      { id: joueur.id, email: joueur.email }, 
+      { id: joueur._id, email: joueur.email }, 
       process.env.JWT_SECRET, 
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
@@ -100,7 +102,7 @@ exports.connexion = async (req, res) => {
       message: 'Connexion réussie',
       token,
       joueur: { 
-        id: joueur.id, 
+        id: joueur._id, 
         pseudo: joueur.pseudo, 
         email: joueur.email,
         patrimoine: joueur.patrimoine,
@@ -127,9 +129,7 @@ exports.connexion = async (req, res) => {
 
 exports.getProfil = async (req, res) => {
   try {
-    const joueur = await Joueur.findByPk(req.user.id, {
-      attributes: { exclude: ['motDePasseHash'] }
-    });
+    const joueur = await Joueur.findById(req.user.id).select('-motDePasseHash');
     
     if (!joueur) {
       return res.status(404).json({ message: 'Joueur non trouvé' });
@@ -145,7 +145,7 @@ exports.getProfil = async (req, res) => {
 exports.updateProfil = async (req, res) => {
   try {
     const { pseudo, email } = req.body;
-    const joueur = await Joueur.findByPk(req.user.id);
+    const joueur = await Joueur.findById(req.user.id);
 
     if (!joueur) {
       return res.status(404).json({ message: 'Joueur non trouvé' });
@@ -153,7 +153,7 @@ exports.updateProfil = async (req, res) => {
 
     // Vérifier si le pseudo est déjà utilisé
     if (pseudo && pseudo !== joueur.pseudo) {
-      const existingJoueur = await Joueur.findOne({ where: { pseudo } });
+      const existingJoueur = await Joueur.findOne({ pseudo });
       if (existingJoueur) {
         return res.status(400).json({ message: 'Ce pseudo est déjà utilisé' });
       }
@@ -161,22 +161,21 @@ exports.updateProfil = async (req, res) => {
 
     // Vérifier si l'email est déjà utilisé
     if (email && email !== joueur.email) {
-      const existingJoueur = await Joueur.findOne({ where: { email } });
+      const existingJoueur = await Joueur.findOne({ email });
       if (existingJoueur) {
         return res.status(400).json({ message: 'Cet email est déjà utilisé' });
       }
     }
 
     // Mettre à jour le profil
-    await joueur.update({
-      pseudo: pseudo || joueur.pseudo,
-      email: email || joueur.email
-    });
+    joueur.pseudo = pseudo || joueur.pseudo;
+    joueur.email = email || joueur.email;
+    await joueur.save();
 
     res.json({
       message: 'Profil mis à jour avec succès',
       joueur: {
-        id: joueur.id,
+        id: joueur._id,
         pseudo: joueur.pseudo,
         email: joueur.email,
         patrimoine: joueur.patrimoine,
@@ -191,11 +190,9 @@ exports.updateProfil = async (req, res) => {
 
 exports.getClassement = async (req, res) => {
   try {
-    const joueurs = await Joueur.findAll({
-      attributes: ['id', 'pseudo', 'patrimoine', 'classement'],
-      order: [['patrimoine', 'DESC']],
-      limit: 10
-    });
+    const joueurs = await Joueur.find({}, 'pseudo patrimoine classement')
+      .sort({ patrimoine: -1 })
+      .limit(10);
 
     res.json(joueurs);
   } catch (error) {
@@ -206,10 +203,7 @@ exports.getClassement = async (req, res) => {
 
 exports.getAllJoueurs = async () => {
   try {
-    const joueurs = await Joueur.findAll({
-      attributes: ['id', 'pseudo', 'email', 'patrimoine', 'classement']
-    });
-    return joueurs;
+    return await Joueur.find({}, 'pseudo email patrimoine classement');
   } catch (error) {
     console.error('Erreur lors de la récupération des joueurs:', error);
     throw error;

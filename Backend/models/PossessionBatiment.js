@@ -1,28 +1,49 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const mongoose = require('mongoose');
 
-const PossessionBatiment = sequelize.define('PossessionBatiment', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
+const possessionBatimentSchema = new mongoose.Schema({
+  joueurId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Joueur',
+    required: true
   },
-  pos_x: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
-  pos_y: {
-    type: DataTypes.INTEGER,
-    allowNull: false
+  batimentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Batiment',
+    required: true
   },
   niveauId: {
-    type: DataTypes.UUID,
-    allowNull: false
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Niveau',
+    required: true
   },
-  joueurId: {
-    type: DataTypes.UUID,
-    allowNull: false
+  positionX: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  positionY: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  dateConstruction: {
+    type: Date,
+    default: Date.now
+  },
+  enConstruction: {
+    type: Boolean,
+    default: false
+  },
+  dateFinConstruction: {
+    type: Date
   }
+}, {
+  timestamps: true
 });
 
-module.exports = PossessionBatiment; 
+// Index pour optimiser les requêtes
+possessionBatimentSchema.index({ joueurId: 1, batimentId: 1 });
+possessionBatimentSchema.index({ joueurId: 1, positionX: 1, positionY: 1 }, { unique: true });
+possessionBatimentSchema.index({ enConstruction: 1, dateFinConstruction: 1 });
+
+module.exports = mongoose.model('PossessionBatiment', possessionBatimentSchema); 

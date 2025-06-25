@@ -1,122 +1,333 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import TextInput from '../components/TextInput.jsx';
 
 const Login: React.FC = () => {
-  const navigate = useNavigate();
-  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [motDePasse, setMotDePasse] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [fieldError, setFieldError] = useState<{ email?: string; motDePasse?: string }>({});
   const [loading, setLoading] = useState(false);
+  const [shake, setShake] = useState(false);
+  const { login, joueur } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+  useEffect(() => {
+    if (joueur) {
+      navigate('/dashboard');
+    }
+  }, [joueur, navigate]);
 
+  const validate = () => {
+    const errors: { email?: string; motDePasse?: string } = {};
+    if (!email) errors.email = 'Email requis';
+    if (!motDePasse) errors.motDePasse = 'Mot de passe requis';
+    return errors;
+  };
+
+  const handleSubmit = async () => {
     try {
-      console.log('Tentative de connexion...');
-      await login({ email, motDePasse });
-      console.log('Connexion réussie, redirection vers le dashboard');
-      navigate('/');
-    } catch (error: any) {
-      console.error('Erreur lors de la connexion:', error);
-      setError(error.message || 'Une erreur est survenue lors de la connexion');
-    } finally {
+      setError('');
+      const errors = validate();
+      setFieldError(errors);
+      if (Object.keys(errors).length > 0) return;
+      setLoading(true);
+      try {
+        await login({ email, motDePasse });
+        navigate('/dashboard');
+      } catch (err: any) {
+        setError(err.message || 'Erreur de connexion');
+        setShake(true);
+        setTimeout(() => setShake(false), 500);
+      } finally {
+        setLoading(false);
+      }
+    } catch (err: any) {
+      setError('Erreur inattendue, veuillez réessayer.');
       setLoading(false);
     }
   };
 
+  // Gestion label flottant
+  const isEmailActive = email.length > 0;
+  const isPasswordActive = motDePasse.length > 0;
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-2xl">
-        <div>
-          <h2 className="mt-6 text-center text-4xl font-extrabold text-gray-900">
-            Bienvenue
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Connectez-vous pour accéder à votre compte
-          </p>
+    <div className="min-h-screen flex items-center justify-center p-0 relative overflow-hidden" style={{ background: 'none' }}>
+      {/* Fond nuage flouté */}
+      <div className="absolute inset-0 -z-10">
+        <img src="/nuage.png" alt="Fond nuage" className="w-full h-full object-cover filter blur-[1px] brightness-75" />
+      </div>
+      <div className={` rounded-2xl shadow-2xl flex flex-col md:flex-row w-full max-w-3xl overflow-hidden border border-[#e0e0e0] animate-fade-in transition-all duration-300 ${shake ? 'animate-shake' : ''} hover:shadow-[0_8px_32px_0_rgba(44,62,80,0.25)] md:-translate-y-4 backdrop-blur-[8px]`}> 
+        {/* Partie gauche : image avec blur, brightness, overlay dégradé */}
+        <div className="hidden md:flex relative w-1/2 min-h-[400px]">
+          <img src="/login.png" alt="Login visuel" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#2C3E50]/50 to-[#1899D6]/20" />
+          <div className="absolute inset-0 flex flex-col items-center justify-end text-center p-4">
+            <span className="text-white text-sm text-base font-medium drop-shadow mb-1 opacity-80">Votre jeu préféré vous attend sur cette plateforme.</span>
+            <span className="text-white text-sm text-base font-medium drop-shadow mb-2 opacity-80">Jouez avec amour, gagnez en jouant.</span>
+          </div>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && (
-            <div className="rounded-md bg-red-50 p-4 border border-red-200">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <p className="text-sm text-red-700">{error}</p>
-                </div>
-              </div>
-            </div>
-          )}
+        {/* Partie droite : formulaire */}
+        <div className="flex-1 flex flex-col justify-center p-8 bg-[#F4F4F4]">
+          <div className="flex items-center justify-center flex-col mb-10">
+            <img src="/logo.png" alt="Logo BizTown" className="w-22 h-22 object-cover" />
+            <span className="text-[#2C3E50] text-2xl font-bold">Se Connectez</span>
+          </div>
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
-              <div className="mt-1">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="votre@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
+              <label className="block text-[#2C3E50] text-sm mb-1">Email</label>
+              <TextInput
+                type="email"
+                className={` ${fieldError.email ? 'border-[#C84B31]' : ''}`}
+                placeholder="Entrez votre email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+              />
+              {fieldError.email && <div className="text-[#C84B31] text-xs mt-1">{fieldError.email}</div>}
             </div>
             <div>
-              <label htmlFor="motDePasse" className="block text-sm font-medium text-gray-700">
-                Mot de passe
-              </label>
-              <div className="mt-1">
-                <input
-                  id="motDePasse"
-                  name="motDePasse"
-                  type="password"
-                  required
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="••••••••"
-                  value={motDePasse}
-                  onChange={(e) => setMotDePasse(e.target.value)}
-                />
-              </div>
+              <label className="block text-[#2C3E50] text-sm mb-1">Mot de passe</label>
+              <TextInput
+                type={showPassword ? 'text' : 'password'}
+                className={`  ${fieldError.motDePasse ? 'border-[#C84B31]' : ''}`}
+                placeholder="Entrez votre mot de passe"
+                value={motDePasse}
+                onChange={e => setMotDePasse(e.target.value)}
+                required
+              />
+              {fieldError.motDePasse && <div className="text-[#C84B31] text-xs mt-1">{fieldError.motDePasse}</div>}
             </div>
-          </div>
-
-          <div>
+            {/* Checkbox animée Se souvenir de moi */}
+            <div className="flex items-center justify-between text-xs text-[#2C3E50] mt-2">
+              <div className="checkbox-wrapper-12 flex items-center">
+                <div className="cbx">
+                  <input id="cbx-12" type="checkbox" />
+                  <label htmlFor="cbx-12"></label>
+                  <svg width="15" height="14" viewBox="0 0 15 14" fill="none">
+                    <path d="M2 8.36364L6.23077 12L13 2"></path>
+                  </svg>
+                </div>
+                <span className="ml-2 select-none">Se souvenir de moi</span>
+                {/* Gooey */}
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+                  <defs>
+                    <filter id="goo-12">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"></feGaussianBlur>
+                      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -7" result="goo-12"></feColorMatrix>
+                      <feBlend in="SourceGraphic" in2="goo-12"></feBlend>
+                    </filter>
+                  </defs>
+                </svg>
+              </div>
+              <a
+                href="#"
+                className="text-blue font-semibold transition hover:underline hover:text-[#4A90E2] [#1899D6]/40 "
+              >
+                Mot de passe oublié ?
+              </a>
+            </div>
             <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors duration-200"
+              type="button"
+              className="button-19 mt-2"
+              disabled={loading || !email || !motDePasse}
+              onClick={handleSubmit}
             >
               {loading ? (
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-              ) : null}
-              {loading ? 'Connexion en cours...' : 'Se connecter'}
+                <span className="flex items-center justify-center"><svg className="animate-spin mr-2" width="20" height="20" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="#fff" strokeWidth="4"></circle><path className="opacity-75" fill="#4A90E2" d="M4 12a8 8 0 018-8v8z"></path></svg>Connexion...</span>
+              ) : 'Commencer à jouer'}
             </button>
+            {error && <div className="text-[#C84B31] text-sm text-center mt-2">{error}</div>}
           </div>
-
-          <div className="text-center">
-            <p className="text-sm text-gray-600">
-              Pas encore de compte ?{' '}
-              <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200">
-                S'inscrire
-              </Link>
-            </p>
+          <div className="text-center text-[#2C3E50] text-sm mt-4">
+            Pas encore de compte ?{' '} 
+            <a
+                href="/register"
+                className="text-blue font-semibold transition hover:underline hover:text-[#4A90E2] [#1899D6]/40 "
+              >
+               Inscrivez-vous
+              </a>
           </div>
-        </form>
+        </div>
       </div>
+      {/* Animation shake et effet ripple */}
+      <style>{`
+        .text-blue {
+          color: #1899D6 !important;
+        }
+        .animate-shake {
+          animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+          10%, 90% { transform: translateX(-2px); }
+          20%, 80% { transform: translateX(4px); }
+          30%, 50%, 70% { transform: translateX(-8px); }
+          40%, 60% { transform: translateX(8px); }
+        }
+        .ripple-effect {
+          position: absolute;
+          border-radius: 50%;
+          transform: scale(0);
+          animation: ripple 0.6s linear;
+          background: rgba(74, 144, 226, 0.3);
+          pointer-events: none;
+          z-index: 10;
+        }
+        @keyframes ripple {
+          to {
+            transform: scale(2.5);
+            opacity: 0;
+          }
+        }
+        .button-19 {
+          appearance: button;
+          background-color: #1899D6;
+          border: solid transparent;
+          border-radius: 16px;
+          border-width: 0 0 4px;
+          box-sizing: border-box;
+          color: #FFFFFF;
+          cursor: pointer;
+          display: inline-block;
+          font-family: din-round,sans-serif;
+          font-size: 15px;
+          font-weight: 700;
+          letter-spacing: .8px;
+          line-height: 20px;
+          margin: 0;
+          margin-top: 20px;
+          outline: none;
+          overflow: visible;
+          padding: 13px 16px;
+          text-align: center;
+          text-transform: uppercase;
+          touch-action: manipulation;
+          transform: translateZ(0);
+          transition: filter .2s;
+          user-select: none;
+          -webkit-user-select: none;
+          vertical-align: middle;
+          white-space: nowrap;
+          position: relative;
+          width: 100%;
+        }
+        .button-19:after {
+          background-clip: padding-box;
+          background-color: #1CB0F6;
+          border: solid transparent;
+          border-radius: 16px;
+          border-width: 0 0 4px;
+          bottom: -4px;
+          content: "";
+          left: 0;
+          position: absolute;
+          right: 0;
+          top: 0;
+          z-index: -1;
+        }
+        .button-19:focus {
+          user-select: auto;
+        }
+        .button-19:hover:not(:disabled) {
+          filter: brightness(1.1);
+          -webkit-filter: brightness(1.1);
+        }
+        .button-19:disabled {
+          cursor: auto;
+        }
+        .button-19:active {
+          border-width: 4px 0 0;
+          background: none;
+        }
+        .checkbox-wrapper-12 {
+          position: relative;
+        }
+        .checkbox-wrapper-12 > svg {
+          position: absolute;
+          top: -130%;
+          left: -170%;
+          width: 110px;
+          pointer-events: none;
+        }
+        .checkbox-wrapper-12 * {
+          box-sizing: border-box;
+        }
+        .checkbox-wrapper-12 input[type="checkbox"] {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          -webkit-tap-highlight-color: transparent;
+          cursor: pointer;
+          margin: 0;
+        }
+        .checkbox-wrapper-12 input[type="checkbox"]:focus {
+          outline: 0;
+        }
+        .checkbox-wrapper-12 .cbx {
+          width: 24px;
+          height: 24px;
+          position: relative;
+          zoom: 0.7;
+        }
+        .checkbox-wrapper-12 .cbx input {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 24px;
+          height: 24px;
+          border: 2px solid #bfbfc0;
+          border-radius: 50%;
+        }
+        .checkbox-wrapper-12 .cbx label {
+          width: 24px;
+          height: 24px;
+          background: none;
+          border-radius: 50%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          -webkit-filter: url("#goo-12");
+          filter: url("#goo-12");
+          transform: translate3d(0, 0, 0);
+          pointer-events: none;
+        }
+        .checkbox-wrapper-12 .cbx svg {
+          position: absolute;
+          top: 5px;
+          left: 4px;
+          z-index: 1;
+          pointer-events: none;
+        }
+        .checkbox-wrapper-12 .cbx svg path {
+          stroke: #fff;
+          stroke-width: 3;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          stroke-dasharray: 19;
+          stroke-dashoffset: 19;
+          transition: stroke-dashoffset 0.3s ease;
+          transition-delay: 0.2s;
+        }
+        .checkbox-wrapper-12 .cbx input:checked + label {
+          animation: splash-12 0.6s ease forwards;
+        }
+        .checkbox-wrapper-12 .cbx input:checked + label + svg path {
+          stroke-dashoffset: 0;
+        }
+        @keyframes splash-12 {
+          40% {
+            background: #1899D6;
+            box-shadow: 0 -18px 0 -8px #1899D6, 16px -8px 0 -8px #1899D6, 16px 8px 0 -8px #1899D6, 0 18px 0 -8px #1899D6, -16px 8px 0 -8px #1899D6, -16px -8px 0 -8px #1899D6;
+          }
+          100% {
+            background: #1899D6;
+            box-shadow: 0 -36px 0 -10px transparent, 32px -16px 0 -10px transparent, 32px 16px 0 -10px transparent, 0 36px 0 -10px transparent, -32px 16px 0 -10px transparent, -32px -16px 0 -10px transparent;
+          }
+        }
+      `}</style>
     </div>
   );
 };

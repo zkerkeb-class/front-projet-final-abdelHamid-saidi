@@ -1,24 +1,27 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const mongoose = require('mongoose');
 
-const Ressource = sequelize.define('Ressource', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
-  },
+const ressourceSchema = new mongoose.Schema({
   type: {
-    type: DataTypes.ENUM('BizCoins', 'Énergie', 'Matériaux', 'Produits', 'Influence'),
-    allowNull: false
+    type: String,
+    required: true,
+    enum: ['BizCoins', 'Énergie', 'Matériaux', 'Produits', 'Influence']
   },
   nom: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true,
+    trim: true
   },
   prix: {
-    type: DataTypes.FLOAT,
-    allowNull: false
+    type: Number,
+    required: true,
+    min: 0
   }
+}, {
+  timestamps: true
 });
 
-module.exports = Ressource; 
+// Index pour optimiser les requêtes
+ressourceSchema.index({ type: 1 });
+ressourceSchema.index({ nom: 1 });
+
+module.exports = mongoose.model('Ressource', ressourceSchema); 

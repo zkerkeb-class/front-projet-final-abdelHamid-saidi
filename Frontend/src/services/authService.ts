@@ -1,6 +1,5 @@
-import axios from 'axios';
-
-const API_URL = 'http://localhost:3000/api'; // Ajustez selon votre configuration backend
+import api from './api';
+import { ENDPOINTS } from '../config/api';
 
 export interface LoginCredentials {
   email: string;
@@ -25,12 +24,17 @@ export interface AuthResponse {
   message: string;
 }
 
-const authService = {
+export interface ProfileUpdateData {
+  pseudo?: string;
+  email?: string;
+}
+
+const authService = { 
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
       console.log('Tentative de connexion avec:', { email: credentials.email });
       
-      const response = await axios.post(`${API_URL}/joueurs/connexion`, credentials);
+      const response = await api.post(ENDPOINTS.AUTH.LOGIN, credentials);
       console.log('Réponse du serveur:', response.data);
 
       if (!response.data.token) {
@@ -49,8 +53,8 @@ const authService = {
       console.log('Connexion réussie, données stockées');
       return response.data;
     } catch (error: any) {
-      console.error('Erreur de connexion:', error.response?.data || error.message);
-      throw new Error(error.response?.data?.message || 'Erreur lors de la connexion');
+      console.error('Erreur de connexion:', error.message);
+      throw error;
     }
   },
 
@@ -58,7 +62,7 @@ const authService = {
     try {
       console.log('Tentative d\'inscription avec:', { pseudo: credentials.pseudo, email: credentials.email });
       
-      const response = await axios.post(`${API_URL}/joueurs/inscription`, credentials);
+      const response = await api.post(ENDPOINTS.AUTH.REGISTER, credentials);
       console.log('Réponse du serveur:', response.data);
 
       if (!response.data.token) {
@@ -77,8 +81,44 @@ const authService = {
       console.log('Inscription réussie, données stockées');
       return response.data;
     } catch (error: any) {
-      console.error('Erreur d\'inscription:', error.response?.data || error.message);
-      throw new Error(error.response?.data?.message || 'Erreur lors de l\'inscription');
+      console.error('Erreur d\'inscription:', error.message);
+      throw error;
+    }
+  },
+
+  async getProfile(): Promise<Joueur> {
+    try {
+      const response = await api.get(ENDPOINTS.AUTH.PROFILE);
+      return response.data;
+    } catch (error: any) {
+      console.error('Erreur lors de la récupération du profil:', error.message);
+      throw error;
+    }
+  },
+
+  async updateProfile(data: ProfileUpdateData): Promise<{ message: string; joueur: Joueur }> {
+    try {
+      const response = await api.put(ENDPOINTS.AUTH.PROFILE, data);
+      
+      // Mettre à jour les données en localStorage
+      if (response.data.joueur) {
+        localStorage.setItem('joueur', JSON.stringify(response.data.joueur));
+      }
+      
+      return response.data;
+    } catch (error: any) {
+      console.error('Erreur lors de la mise à jour du profil:', error.message);
+      throw error;
+    }
+  },
+
+  async getClassement(): Promise<Joueur[]> {
+    try {
+      const response = await api.get(ENDPOINTS.AUTH.CLASSEMENT);
+      return response.data;
+    } catch (error: any) {
+      console.error('Erreur lors de la récupération du classement:', error.message);
+      throw error;
     }
   },
 
