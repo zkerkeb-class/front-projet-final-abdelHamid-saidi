@@ -1,0 +1,458 @@
+.game-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between; 
+  padding: 1.5rem;    
+  position: fixed;
+  z-index: 10;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0; 
+  animation: headerFadeIn 0.7s cubic-bezier(.36,.07,.19,.97);
+}
+@keyframes headerFadeIn {
+  from { opacity: 0; transform: translateY(-30px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+/* Profil */
+.gh-profile {
+  display: flex;
+  align-items: center;
+  background: var(--primary);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px var(--black-transparent-3), 0 0 0 4px var(--white-transparent-2) inset;
+  padding: 8px 22px 8px 8px;
+  min-width: 260px;
+  max-width: 340px;
+  position: relative;
+  transition: box-shadow 0.2s;
+}
+.gh-profile:hover {
+  box-shadow: 0 4px 24px var(--primary-light-transparent-55), 0 0 0 4px var(--white-transparent-4) inset;
+}
+.gh-profile__avatar {
+  width: 62px; height: 62px;
+  border-radius: 12px;
+  border: 3px solid var(--primary-blue);
+  object-fit: cover;
+  margin-right: 14px; 
+  background: var(--septenary);
+  transition: box-shadow 0.2s, border 0.2s;
+} 
+.gh-profile__info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+.gh-profile__name {
+  color: var(--septenary);
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px; 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+  line-height: 1.1;
+}
+.gh-profile__level {
+  color: var(--primary-light);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+  margin-top: 1px;
+  letter-spacing: 0.5px; 
+}
+.gh-profile__xpbar {
+  width: 100%;
+  height: 10px;
+  background: var(--senary);
+  border-radius: 7px;
+  margin-top: 2px;
+  overflow: hidden; 
+  position: relative;
+}
+.gh-profile__xpbar-inner {
+  height: 100%;
+  background:  var(--primary-light) ;
+  border-radius: 7px;
+  width: 70%;
+  transition: width 0.7s cubic-bezier(.36,.07,.19,.97); 
+  animation: barGrow 1.2s cubic-bezier(.36,.07,.19,.97);
+}
+@keyframes barGrow {
+  from { width: 0;}
+  to { width: 70%;}
+}
+
+/* Jauges */
+.gh-bars {
+  display: flex;
+  gap: 22px;
+  margin: 0 38px;
+}
+.gh-bar {
+  background: linear-gradient(120deg, var(--primary-blue) 80%, var(--primary-light) 120%);
+  border-radius: 13px;
+  box-shadow: 0 2px 12px var(--black-transparent-2), 0 0 0 3px var(--white-transparent-2) inset;
+  padding: 8px 22px;
+  display: flex;
+  align-items: center;
+  min-width: 180px;
+  max-width: 240px;
+  position: relative;
+  transition: box-shadow 0.2s;
+} 
+.gh-bar__icon {
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  filter: drop-shadow(0 2px 8px var(--tertiary-transparent-88));
+  transition: filter 0.2s;
+}
+.gh-bar__text {
+  color: var(--septenary);
+  font-weight: 800;
+  font-size: 1.09rem;
+  margin-right: 12px;
+  white-space: nowrap;
+  text-shadow: 0 2px 8px var(--black-transparent-4);
+}
+.gh-bar__progress {
+  flex: 1;
+  height: 10px;
+  background: var(--senary);
+  border-radius: 7px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px var(--tertiary-transparent-44) inset;
+  position: relative;
+}
+.gh-bar__progress-inner {
+  height: 100%;
+  border-radius: 7px;
+  transition: width 0.7s cubic-bezier(.36,.07,.19,.97);
+  box-shadow: 0 0 8px var(--tertiary-transparent-88);
+  animation: barGrow 1.2s cubic-bezier(.36,.07,.19,.97);
+}
+.gh-bar--energy .gh-bar__progress-inner {
+  background: linear-gradient(90deg, var(--tertiary) 0%, var(--tertiary-light) 100%);
+}
+.gh-bar--pop .gh-bar__progress-inner {
+  background: linear-gradient(90deg, var(--quaternary) 0%, var(--quinary) 100%);
+  box-shadow: 0 0 8px var(--quaternary-transparent-88);
+}
+
+/* Ressources */
+.gh-resources {
+  display: flex;
+  gap: 22px;
+}
+
+.gh-resource__icon {
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  filter: drop-shadow(0 2px 8px var(--tertiary-transparent-88));
+  transition: filter 0.2s;
+}
+
+.gh-resource__value {
+  color: var(--septenary);
+  font-weight: 800;
+  font-size: 1.13rem;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 8px var(--black-transparent-4);
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .game-header { flex-direction: column; align-items: stretch; padding: 10px 8px; }
+  .gh-bars { margin: 12px 0; }
+}
+@media (max-width: 700px) {
+  .game-header { flex-direction: column; align-items: stretch; padding: 8px 2px; }
+  .gh-profile, .gh-bar, .gh-resource { min-width: 0; max-width: 100vw; padding: 6px 8px; }
+  .gh-bars, .gh-resources { gap: 8px; }
+  .gh-profile__avatar { width: 40px; height: 40px; }
+}
+
+.header-green-bg { 
+  padding: 0;
+  min-height: 70px;
+  width: 100vw;
+  border-radius: 0 0 18px 18px;
+  box-shadow: 0 4px 24px 0 #0002;
+  font-family: 'Poppins', 'Montserrat', Arial, sans-serif;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.header-content {
+  width: 100%;
+  max-width: 1300px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 8px 18px 0 18px;
+  gap: 18px;
+}
+
+/* Profil */
+.profile-block {
+  display: flex;
+  align-items: center;
+  background: #1a4fa0;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px #0002;
+  padding: 7px 18px 7px 7px;
+  min-width: 260px;
+  max-width: 320px; 
+}
+.profile-avatar {
+  width: 54px; height: 54px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-right: 12px;
+  background: #fff; 
+}
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.profile-name {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.profile-level {
+  color: var(--primary-light);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 2px;
+  margin-top: 1px;
+  letter-spacing: 0.5px;
+}
+.profile-xpbar {
+  width: 100%;
+  height: 8px;
+  background: var(--senary);
+  border-radius: 6px;
+  margin-top: 2px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px var(--black-transparent-2) inset;
+}
+.profile-xpbar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-light) 0%, var(--primary-blue) 100%);
+  border-radius: 6px;
+  width: 70%;
+  transition: width 0.3s;
+}
+
+/* Jauges */
+.gauges {
+  display: flex;
+  gap: 18px;
+  margin: 0 32px;
+}
+.gauge-block {
+  background: var(--primary-blue);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px var(--black-transparent-2);
+  padding: 7px 18px;
+  display: flex;
+  align-items: center;
+  min-width: 170px;
+  max-width: 220px;
+  position: relative;
+}
+.gauge-icon {
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+}
+.gauge-text {
+  color: var(--septenary);
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-right: 10px;
+  white-space: nowrap;
+}
+.gauge-main {
+  color: var(--tertiary);
+  font-size: 1.08em;
+}
+.gauge-sep {
+  color: var(--septenary);
+  opacity: 0.7;
+}
+.gauge-max {
+  color: var(--quaternary);
+  font-size: 1.01em;
+}
+.gauge-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--senary);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px var(--black-transparent-2) inset;
+}
+.gauge-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, var(--tertiary) 0%, var(--tertiary-light) 100%);
+  border-radius: 6px;
+  transition: width 0.3s;
+}
+.gauge-bar--pop .gauge-bar-inner {
+  background: linear-gradient(90deg, var(--quaternary) 0%, var(--quinary) 100%);
+}
+
+/* Ressources */
+.resources {
+  display: flex;
+  gap: 18px;
+}
+.resource-block {
+  background: var(--primary-blue);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px var(--black-transparent-2);
+  padding: 7px 10px;
+  display: flex;
+  align-items: center;
+  min-width: 110px;
+  justify-content: center;
+}
+.resource-icon {
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+}
+.resource-value {
+  color: var(--septenary);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .header-content { flex-direction: column; align-items: stretch; padding: 10px 8px; }
+  .gauges { margin: 12px 0; }
+}
+@media (max-width: 700px) {
+  .header-content { flex-direction: column; align-items: stretch; padding: 8px 2px; }
+  .profile-block, .gauge-block, .resource-block { min-width: 0; max-width: 100vw; padding: 6px 8px; }
+  .gauges, .resources { gap: 8px; }
+  .profile-avatar { width: 40px; height: 40px; }
+}
+
+/* Classe commune pour les boutons du header */
+.header-button {
+  align-items: center;
+  appearance: none;
+  background-image: radial-gradient(100% 100% at 100% 0, var(--primary) 0, var(--primary-dark) 100%);
+  box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,var(--secondary) 0 -3px 0 inset;
+  border-radius: 1.3rem; 
+  box-sizing: border-box;
+  color: var(--septenary);
+  cursor: pointer;
+  display: inline-flex; 
+  font-weight: 700;
+  height: auto;
+  line-height: 1.2;
+  list-style: none;
+  overflow: hidden;
+  padding: 12px 16px;
+  position: relative;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  will-change: transform, box-shadow;
+  font-size: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.header-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--white-transparent-2), transparent);
+  transition: left 0.5s;
+}
+
+.header-button:hover::before {
+  left: 100%;
+}
+
+.header-button:hover {
+  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -2px, var(--secondary) 0 -4px 0 inset;
+  transform: translateY(-1px);
+}
+
+/* Styles spécifiques pour button-30 */
+.button-30 {
+  justify-content: flex-start;
+  text-align: left;
+  min-width: 280px;
+  max-width: 350px;
+}
+
+/* Styles spécifiques pour gh-resource */
+.gh-resource {
+  justify-content: center;
+  text-align: center;
+  min-width: 120px;
+  max-width: 150px;
+} 
+
+/* Responsive pour tous les boutons du header */
+@media (max-width: 1100px) {
+  .header-button {
+    padding: 10px 16px;
+    font-size: 15px;
+  }
+  
+  .button-30 {
+    min-width: 250px;
+    max-width: 300px;
+  }
+  
+  .gh-resource {
+    min-width: 100px;
+    max-width: 130px;
+  }
+}
+
+@media (max-width: 700px) {
+  .header-button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 12px;
+  }
+  
+  .button-30 {
+    min-width: 200px;
+    max-width: 100%;
+  }
+  
+  .gh-resource {
+    min-width: 80px;
+    max-width: 100%;
+  }
+}

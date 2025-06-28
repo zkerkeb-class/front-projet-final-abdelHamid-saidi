@@ -1,0 +1,62 @@
+/* Animations personnalisées pour BizTown Dashboard */
+
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
+
+body, .font-[Rubik\,sans-serif] {
+  font-family: 'Rubik', Arial, sans-serif;
+}
+
+/* Animation pulse douce sur hover */
+.animate-pulse-on-hover:hover {
+  animation: pulse 0.7s;
+}
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); box-shadow: 0 0 24px #7ED95744; }
+  100% { transform: scale(1); }
+}
+
+/* Animation bounce lente */
+.animate-bounce-slow {
+  animation: bounce-slow 2.2s infinite;
+}
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+/* Ombre cartoon pour bâtiments */
+.shadow-building {
+  box-shadow: 0 8px 32px 0 #b0b8c1aa, 0 2px 0 0 #fff;
+}
+
+/* Glow sur hover menu bas/sidebar */
+.hover\:shadow-glow:hover {
+  box-shadow: 0 0 16px #1899D6aa, 0 2px 8px #7ED95755;
+}
+
+/* Badge niveau effet cartoon */
+.badge-niveau {
+  background: linear-gradient(90deg, #FFD700 60%, #fffbe6 100%);
+  color: #fff;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px #FFD70055;
+  font-weight: bold;
+  font-size: 0.85rem;
+  padding: 2px 8px;
+  border-radius: 1rem;
+} 
+
+.Barre-haut{
+  border-radius: 1rem;
+  background-color: #295b7a88;
+  margin: 0.8rem;
+}
+.sidebar {
+  margin: 0.8rem;
+}
+.sidebar-item {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: #295b7a88; 
+}

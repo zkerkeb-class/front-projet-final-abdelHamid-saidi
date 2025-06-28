@@ -1,23 +1,21 @@
 // Import de tous les modèles Mongoose
 const Joueur = require('./Joueur');
 const CasesTerrain = require('./CasesTerrain');
-const Batiment = require('./Batiment');
-const Niveau = require('./Niveau');
-const PossessionBatiment = require('./PossessionBatiment');
+const NiveauBatiment = require('./NiveauBatiment');
 const Ressource = require('./Ressource');
+const RessourceJoueur = require('./RessourceJoueur');
 const ProductionRessource = require('./ProductionRessource');
 const BesoinRessource = require('./BesoinRessource');
-const CasesBatiment = require('./CasesBatiment');
+const PossessionBatiment = require('./PossessionBatiment');
 
 // Export de tous les modèles
 module.exports = {
   Joueur,
   CasesTerrain,
-  Batiment,
-  Niveau,
   PossessionBatiment,
+  NiveauBatiment, 
   Ressource,
+  RessourceJoueur,
   ProductionRessource,
-  BesoinRessource,
-  CasesBatiment
+  BesoinRessource, 
 }; 

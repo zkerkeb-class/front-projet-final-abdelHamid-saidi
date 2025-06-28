@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import TextInput from '../components/TextInput.jsx';
+import TextInput from '../components/TextInput';
+import Button19 from '../components/Button19';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -130,16 +131,15 @@ const Login: React.FC = () => {
                 Mot de passe oublié ?
               </a>
             </div>
-            <button
-              type="button"
-              className="button-19 mt-2"
+            <Button19
               disabled={loading || !email || !motDePasse}
               onClick={handleSubmit}
+              className="mt-2"
             >
               {loading ? (
                 <span className="flex items-center justify-center"><svg className="animate-spin mr-2" width="20" height="20" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="#fff" strokeWidth="4"></circle><path className="opacity-75" fill="#4A90E2" d="M4 12a8 8 0 018-8v8z"></path></svg>Connexion...</span>
               ) : 'Commencer à jouer'}
-            </button>
+            </Button19>
             {error && <div className="text-[#C84B31] text-sm text-center mt-2">{error}</div>}
           </div>
           <div className="text-center text-[#2C3E50] text-sm mt-4">
@@ -181,66 +181,6 @@ const Login: React.FC = () => {
             transform: scale(2.5);
             opacity: 0;
           }
-        }
-        .button-19 {
-          appearance: button;
-          background-color: #1899D6;
-          border: solid transparent;
-          border-radius: 16px;
-          border-width: 0 0 4px;
-          box-sizing: border-box;
-          color: #FFFFFF;
-          cursor: pointer;
-          display: inline-block;
-          font-family: din-round,sans-serif;
-          font-size: 15px;
-          font-weight: 700;
-          letter-spacing: .8px;
-          line-height: 20px;
-          margin: 0;
-          margin-top: 20px;
-          outline: none;
-          overflow: visible;
-          padding: 13px 16px;
-          text-align: center;
-          text-transform: uppercase;
-          touch-action: manipulation;
-          transform: translateZ(0);
-          transition: filter .2s;
-          user-select: none;
-          -webkit-user-select: none;
-          vertical-align: middle;
-          white-space: nowrap;
-          position: relative;
-          width: 100%;
-        }
-        .button-19:after {
-          background-clip: padding-box;
-          background-color: #1CB0F6;
-          border: solid transparent;
-          border-radius: 16px;
-          border-width: 0 0 4px;
-          bottom: -4px;
-          content: "";
-          left: 0;
-          position: absolute;
-          right: 0;
-          top: 0;
-          z-index: -1;
-        }
-        .button-19:focus {
-          user-select: auto;
-        }
-        .button-19:hover:not(:disabled) {
-          filter: brightness(1.1);
-          -webkit-filter: brightness(1.1);
-        }
-        .button-19:disabled {
-          cursor: auto;
-        }
-        .button-19:active {
-          border-width: 4px 0 0;
-          background: none;
         }
         .checkbox-wrapper-12 {
           position: relative;

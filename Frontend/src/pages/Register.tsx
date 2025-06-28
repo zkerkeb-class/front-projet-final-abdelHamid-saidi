@@ -2,14 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import TextInput from '../components/TextInput';
+import Button19 from '../components/Button19';
 
 const Register: React.FC = () => {
   const [pseudo, setPseudo] = useState('');
   const [email, setEmail] = useState('');
   const [motDePasse, setMotDePasse] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [fieldError, setFieldError] = useState<{ pseudo?: string; email?: string; motDePasse?: string }>({});
   const [loading, setLoading] = useState(false);
+  const [shake, setShake] = useState(false);
   const navigate = useNavigate();
   const { register, joueur } = useAuth();
 
@@ -39,6 +42,8 @@ const Register: React.FC = () => {
         navigate('/dashboard');
       } catch (err: any) {
         setError(err.message || "Erreur lors de l'inscription");
+        setShake(true);
+        setTimeout(() => setShake(false), 500);
       } finally {
         setLoading(false);
       }
@@ -49,185 +54,224 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden gradient-bg">
-      {/* Fond animé avec particules */}
+    <div className="min-h-screen flex items-center justify-center p-0 relative overflow-hidden" style={{ background: 'none' }}>
+      {/* Fond nuage flouté */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-accent-300/20 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-primary-300/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-accent-200/10 rounded-full blur-3xl animate-pulse-slow"></div>
+        <img src="/nuage.png" alt="Fond nuage" className="w-full h-full object-cover filter blur-[1px] brightness-75" />
       </div>
-
-      {/* Carte d'inscription moderne */}
-      <div className="w-full max-w-4xl bg-white/90 backdrop-blur-xl rounded-3xl shadow-large border border-white/20 overflow-hidden animate-fade-in">
-        <div className="flex flex-col lg:flex-row min-h-[600px]">
-          {/* Section gauche - Image et branding */}
-          <div className="lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-accent-500 via-accent-600 to-primary-500">
-            <div className="absolute inset-0 bg-black/20"></div>
-            <div className="relative h-full flex flex-col justify-center items-center text-white p-8">
-              <div className="text-center space-y-6 animate-slide-up">
-                <div className="relative">
-                  <img src="/logo.png" alt="Logo BizTown" className="w-24 h-24 rounded-2xl object-cover shadow-2xl mx-auto mb-6 animate-bounce-gentle" />
-                  <div className="absolute -inset-2 bg-gradient-to-r from-accent-400 to-primary-400 rounded-2xl blur-lg opacity-30 animate-pulse"></div>
-                </div>
-                <div>
-                  <h1 className="text-4xl font-bold mb-2 text-gradient">BizTown</h1>
-                  <p className="text-lg font-medium opacity-90">Rejoignez l'aventure</p>
-                </div>
-                <div className="space-y-3 text-sm opacity-80">
-                  <div className="flex items-center justify-center space-x-2">
-                    <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                    <span>Créez votre compte gratuitement</span>
-                  </div>
-                  <div className="flex items-center justify-center space-x-2">
-                    <div className="w-2 h-2 bg-white rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-                    <span>Accédez à toutes les fonctionnalités</span>
-                  </div>
-                  <div className="flex items-center justify-center space-x-2">
-                    <div className="w-2 h-2 bg-white rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-                    <span>Commencez à construire votre ville</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <div className={` rounded-2xl shadow-2xl flex flex-col md:flex-row w-full max-w-3xl overflow-hidden border border-[#e0e0e0] animate-fade-in transition-all duration-300 ${shake ? 'animate-shake' : ''} hover:shadow-[0_8px_32px_0_rgba(44,62,80,0.25)] md:-translate-y-4 backdrop-blur-[8px]`}> 
+        {/* Partie gauche : image avec blur, brightness, overlay dégradé */}
+        <div className="hidden md:flex relative w-1/2 min-h-[400px]">
+          <img src="/login.png" alt="Register visuel" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#2C3E50]/50 to-[#1899D6]/20" />
+          <div className="absolute inset-0 flex flex-col items-center justify-end text-center p-4">
+            <span className="text-white text-sm text-base font-medium drop-shadow mb-1 opacity-80">Rejoignez l'aventure BizTown dès aujourd'hui.</span>
+            <span className="text-white text-sm text-base font-medium drop-shadow mb-2 opacity-80">Créez votre compte et commencez à construire.</span>
           </div>
-
-          {/* Section droite - Formulaire */}
-          <div className="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
-            <div className="space-y-8">
-              {/* En-tête du formulaire */}
-              <div className="text-center space-y-2">
-                <h2 className="text-3xl font-bold text-secondary-900">Créer un compte</h2>
-                <p className="text-secondary-600">Rejoignez BizTown et commencez votre aventure</p>
-              </div>
-
-              {/* Formulaire */}
-              <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-6">
-                {/* Pseudo */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-secondary-700">
-                    Nom d'utilisateur
-                  </label>
-                  <div className="relative">
-                    <TextInput
-                      type="text"
-                      className="pr-10"
-                      placeholder="Votre nom d'utilisateur"
-                      value={pseudo}
-                      onChange={e => setPseudo(e.target.value)}
-                      required
-                      error={fieldError.pseudo}
-                    />
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                      <svg className="w-5 h-5 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                    </div>
-                  </div>
+        </div>
+        {/* Partie droite : formulaire */}
+        <div className="flex-1 flex flex-col justify-center p-8 bg-[#F4F4F4]">
+          <div className="flex items-center justify-center flex-col mb-10">
+            <img src="/logo.png" alt="Logo BizTown" className="w-22 h-22 object-cover" />
+            <span className="text-[#2C3E50] text-2xl font-bold">S'inscrire</span>
+          </div>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-[#2C3E50] text-sm mb-1">Nom d'utilisateur</label>
+              <TextInput
+                type="text"
+                className={` ${fieldError.pseudo ? 'border-[#C84B31]' : ''}`}
+                placeholder="Entrez votre nom d'utilisateur"
+                value={pseudo}
+                onChange={e => setPseudo(e.target.value)}
+                required
+              />
+              {fieldError.pseudo && <div className="text-[#C84B31] text-xs mt-1">{fieldError.pseudo}</div>}
+            </div>
+            <div>
+              <label className="block text-[#2C3E50] text-sm mb-1">Email</label>
+              <TextInput
+                type="email"
+                className={` ${fieldError.email ? 'border-[#C84B31]' : ''}`}
+                placeholder="Entrez votre email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+              />
+              {fieldError.email && <div className="text-[#C84B31] text-xs mt-1">{fieldError.email}</div>}
+            </div>
+            <div>
+              <label className="block text-[#2C3E50] text-sm mb-1">Mot de passe</label>
+              <TextInput
+                type={showPassword ? 'text' : 'password'}
+                className={`  ${fieldError.motDePasse ? 'border-[#C84B31]' : ''}`}
+                placeholder="Créez votre mot de passe"
+                value={motDePasse}
+                onChange={e => setMotDePasse(e.target.value)}
+                required
+              />
+              {fieldError.motDePasse && <div className="text-[#C84B31] text-xs mt-1">{fieldError.motDePasse}</div>}
+            </div>
+            {/* Checkbox animée Conditions d'utilisation */}
+            <div className="flex items-center justify-between text-xs text-[#2C3E50] mt-2">
+              <div className="checkbox-wrapper-12 flex items-center">
+                <div className="cbx">
+                  <input id="cbx-12" type="checkbox" required />
+                  <label htmlFor="cbx-12"></label>
+                  <svg width="15" height="14" viewBox="0 0 15 14" fill="none">
+                    <path d="M2 8.36364L6.23077 12L13 2"></path>
+                  </svg>
                 </div>
-
-                {/* Email */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-secondary-700">
-                    Adresse email
-                  </label>
-                  <div className="relative">
-                    <TextInput
-                      type="email"
-                      className="pr-10"
-                      placeholder="votre@email.com"
-                      value={email}
-                      onChange={e => setEmail(e.target.value)}
-                      required
-                      error={fieldError.email}
-                    />
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                      <svg className="w-5 h-5 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Mot de passe */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-secondary-700">
-                    Mot de passe
-                  </label>
-                  <TextInput
-                    type="password"
-                    placeholder="Créez un mot de passe sécurisé"
-                    value={motDePasse}
-                    onChange={e => setMotDePasse(e.target.value)}
-                    required
-                    error={fieldError.motDePasse}
-                  />
-                </div>
-
-                {/* Conditions d'utilisation */}
-                <div className="flex items-start space-x-3">
-                  <input 
-                    type="checkbox" 
-                    id="terms" 
-                    className="w-4 h-4 text-accent-600 border-secondary-300 rounded focus:ring-accent-500 mt-1" 
-                    required
-                  />
-                  <label htmlFor="terms" className="text-sm text-secondary-600">
-                    J'accepte les{' '}
-                    <a href="#" className="text-accent-600 hover:text-accent-700 font-medium transition-colors">
-                      conditions d'utilisation
-                    </a>
-                    {' '}et la{' '}
-                    <a href="#" className="text-accent-600 hover:text-accent-700 font-medium transition-colors">
-                      politique de confidentialité
-                    </a>
-                  </label>
-                </div>
-
-                {/* Bouton d'inscription */}
-                <button
-                  type="submit"
-                  disabled={loading || !pseudo || !email || !motDePasse}
-                  className="w-full btn-accent py-4 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading ? (
-                    <div className="flex items-center justify-center space-x-2">
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>Création du compte...</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center space-x-2">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                      </svg>
-                      <span>Créer mon compte</span>
-                    </div>
-                  )}
-                </button>
-
-                {/* Message d'erreur */}
-                {error && (
-                  <div className="flex items-center space-x-2 p-3 bg-error-50 border border-error-200 rounded-xl text-error-700 text-sm">
-                    <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                    </svg>
-                    <span>{error}</span>
-                  </div>
-                )}
-              </form>
-
-              {/* Lien de connexion */}
-              <div className="text-center">
-                <p className="text-secondary-600">
-                  Déjà un compte ?{' '}
-                  <a href="/login" className="text-accent-600 hover:text-accent-700 font-semibold transition-colors">
-                    Se connecter
-                  </a>
-                </p>
+                <span className="ml-2 select-none">J'accepte les conditions d'utilisation</span>
+                {/* Gooey */}
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+                  <defs>
+                    <filter id="goo-12">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"></feGaussianBlur>
+                      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -7" result="goo-12"></feColorMatrix>
+                      <feBlend in="SourceGraphic" in2="goo-12"></feBlend>
+                    </filter>
+                  </defs>
+                </svg>
               </div>
             </div>
+            <Button19
+              disabled={loading || !pseudo || !email || !motDePasse}
+              onClick={handleSubmit}
+              className="mt-2"
+            >
+              {loading ? (
+                <span className="flex items-center justify-center"><svg className="animate-spin mr-2" width="20" height="20" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="#fff" strokeWidth="4"></circle><path className="opacity-75" fill="#4A90E2" d="M4 12a8 8 0 018-8v8z"></path></svg>Création...</span>
+              ) : 'Créer mon compte'}
+            </Button19>
+            {error && <div className="text-[#C84B31] text-sm text-center mt-2">{error}</div>}
+          </div>
+          <div className="text-center text-[#2C3E50] text-sm mt-4">
+            Déjà un compte ?{' '} 
+            <a
+                href="/login"
+                className="text-blue font-semibold transition hover:underline hover:text-[#4A90E2] [#1899D6]/40 "
+              >
+               Se connecter
+              </a>
           </div>
         </div>
       </div>
+      {/* Animation shake et effet ripple */}
+      <style>{`
+        .text-blue {
+          color: #1899D6 !important;
+        }
+        .animate-shake {
+          animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+          10%, 90% { transform: translateX(-2px); }
+          20%, 80% { transform: translateX(4px); }
+          30%, 50%, 70% { transform: translateX(-8px); }
+          40%, 60% { transform: translateX(8px); }
+        }
+        .ripple-effect {
+          position: absolute;
+          border-radius: 50%;
+          transform: scale(0);
+          animation: ripple 0.6s linear;
+          background: rgba(74, 144, 226, 0.3);
+          pointer-events: none;
+          z-index: 10;
+        }
+        @keyframes ripple {
+          to {
+            transform: scale(2.5);
+            opacity: 0;
+          }
+        }
+        .checkbox-wrapper-12 {
+          position: relative;
+        }
+        .checkbox-wrapper-12 > svg {
+          position: absolute;
+          top: -130%;
+          left: -170%;
+          width: 110px;
+          pointer-events: none;
+        }
+        .checkbox-wrapper-12 * {
+          box-sizing: border-box;
+        }
+        .checkbox-wrapper-12 input[type="checkbox"] {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          -webkit-tap-highlight-color: transparent;
+          cursor: pointer;
+          margin: 0;
+        }
+        .checkbox-wrapper-12 input[type="checkbox"]:focus {
+          outline: 0;
+        }
+        .checkbox-wrapper-12 .cbx {
+          width: 24px;
+          height: 24px;
+          position: relative;
+          zoom: 0.7;
+        }
+        .checkbox-wrapper-12 .cbx input {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 24px;
+          height: 24px;
+          border: 2px solid #bfbfc0;
+          border-radius: 50%;
+        }
+        .checkbox-wrapper-12 .cbx label {
+          width: 24px;
+          height: 24px;
+          background: none;
+          border-radius: 50%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          -webkit-filter: url("#goo-12");
+          filter: url("#goo-12");
+          transform: translate3d(0, 0, 0);
+          pointer-events: none;
+        }
+        .checkbox-wrapper-12 .cbx svg {
+          position: absolute;
+          top: 5px;
+          left: 4px;
+          z-index: 1;
+          pointer-events: none;
+        }
+        .checkbox-wrapper-12 .cbx svg path {
+          stroke: #fff;
+          stroke-width: 3;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          stroke-dasharray: 19;
+          stroke-dashoffset: 19;
+          transition: stroke-dashoffset 0.3s ease;
+          transition-delay: 0.2s;
+        }
+        .checkbox-wrapper-12 .cbx input:checked + label {
+          animation: splash-12 0.6s ease forwards;
+        }
+        .checkbox-wrapper-12 .cbx input:checked + label + svg path {
+          stroke-dashoffset: 0;
+        }
+        @keyframes splash-12 {
+          40% {
+            background: #1899D6;
+            box-shadow: 0 -18px 0 -8px #1899D6, 16px -8px 0 -8px #1899D6, 16px 8px 0 -8px #1899D6, 0 18px 0 -8px #1899D6, -16px 8px 0 -8px #1899D6, -16px -8px 0 -8px #1899D6;
+          }
+          100% {
+            background: #1899D6;
+            box-shadow: 0 -36px 0 -10px transparent, 32px -16px 0 -10px transparent, 32px 16px 0 -10px transparent, 0 36px 0 -10px transparent, -32px 16px 0 -10px transparent, -32px -16px 0 -10px transparent;
+          }
+        }
+      `}</style>
     </div>
   );
 };

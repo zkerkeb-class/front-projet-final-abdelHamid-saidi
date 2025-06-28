@@ -5,8 +5,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
-import Classement from './pages/Classement';
+import Main from './pages/main'; 
 import NotFound from './pages/NotFound';
 
 const App: React.FC = () => {
@@ -23,20 +22,12 @@ const App: React.FC = () => {
             <PrivateRoute>
               <Dashboard />
             </PrivateRoute>
-          } />
-          <Route path="/profile" element={
+          }/>
+          <Route path="/" element={
             <PrivateRoute>
-              <Profile />
+              <Main />
             </PrivateRoute>
           } />
-          <Route path="/classement" element={
-            <PrivateRoute>
-              <Classement />
-            </PrivateRoute>
-          } />
-          
-          {/* Redirection par défaut */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
           
           {/* Page 404 */}
           <Route path="*" element={<NotFound />} />

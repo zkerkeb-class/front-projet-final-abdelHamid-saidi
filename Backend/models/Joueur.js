@@ -6,7 +6,8 @@ const joueurSchema = new mongoose.Schema({
     required: true,
     unique: true,
     trim: true,
-    minlength: 3
+    minlength: 3,
+    maxlength: 20
   },
   email: {
     type: String,
@@ -28,14 +29,32 @@ const joueurSchema = new mongoose.Schema({
     type: Number,
     default: 0,
     min: 0
+  },
+  niveauActuel: {
+    type: Number,
+    default: 1,
+    min: 1
+  },
+  experience: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+  dateDerniereConnexion: {
+    type: Date,
+    default: Date.now
+  },
+  actif: {
+    type: Boolean,
+    default: true
   }
 }, {
   timestamps: true
 });
 
-// Index pour optimiser les requêtes
-joueurSchema.index({ email: 1 });
-joueurSchema.index({ pseudo: 1 });
+// Index pour optimiser les requêtes (sans les champs déjà indexés par unique: true)
 joueurSchema.index({ patrimoine: -1 }); // Pour le classement
+joueurSchema.index({ niveauActuel: -1 });
+joueurSchema.index({ actif: 1 });
 
 module.exports = mongoose.model('Joueur', joueurSchema); 

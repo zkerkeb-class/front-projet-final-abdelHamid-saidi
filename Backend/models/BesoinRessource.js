@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 const besoinRessourceSchema = new mongoose.Schema({
   niveauId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Niveau',
+    ref: 'NiveauBatiment',
     required: true
   },
-  recepteurId: {
+  ressourceId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Ressource',
     required: true
@@ -16,7 +16,7 @@ const besoinRessourceSchema = new mongoose.Schema({
     required: true,
     min: 0
   },
-  productionRessourcesId: {
+  productionRessourceId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'ProductionRessource'
   }
@@ -25,7 +25,7 @@ const besoinRessourceSchema = new mongoose.Schema({
 });
 
 // Index pour optimiser les requêtes
-besoinRessourceSchema.index({ niveauId: 1, recepteurId: 1 });
-besoinRessourceSchema.index({ productionRessourcesId: 1 });
+besoinRessourceSchema.index({ niveauId: 1, ressourceId: 1 });
+besoinRessourceSchema.index({ productionRessourceId: 1 });
 
 module.exports = mongoose.model('BesoinRessource', besoinRessourceSchema); 

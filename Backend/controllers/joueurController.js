@@ -27,7 +27,7 @@ exports.inscription = async (req, res) => {
       pseudo, 
       email, 
       motDePasseHash: hash,
-      patrimoine: 0,
+      patrimoine: 1000,
       classement: 0
     });
 

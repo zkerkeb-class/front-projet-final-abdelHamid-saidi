@@ -54,4 +54,62 @@ api.interceptors.response.use(
   }
 );
 
-export default api; 
+export default api;
+
+// Services pour les bâtiments
+export const batimentService = {
+  // Récupérer tous les niveaux de bâtiments
+  getAllNiveauxBatiments: async () => {
+    const response = await api.get('/niveaux-batiments');
+    return response.data;
+  },
+
+  // Récupérer les niveaux par nom de bâtiment
+  getNiveauxByNom: async (nom: string) => {
+    const response = await api.get(`/niveaux-batiments/nom/${nom}`);
+    return response.data;
+  },
+
+  // Récupérer les niveaux par niveau
+  getNiveauxByNiveau: async (niveau: number) => {
+    const response = await api.get(`/niveaux-batiments/niveau/${niveau}`);
+    return response.data;
+  },
+
+  // Récupérer un niveau de bâtiment par ID
+  getNiveauBatimentById: async (id: string) => {
+    const response = await api.get(`/niveaux-batiments/${id}`);
+    return response.data;
+  }
+};
+
+// Services pour les ressources
+export const ressourceService = {
+  // Récupérer toutes les ressources
+  getAllRessources: async () => {
+    const response = await api.get('/ressources');
+    return response.data;
+  },
+
+  // Récupérer les ressources par type
+  getRessourcesByType: async (type: string) => {
+    const response = await api.get(`/ressources/type/${type}`);
+    return response.data;
+  },
+
+  // Récupérer une ressource par ID
+  getRessourceById: async (id: string) => {
+    const response = await api.get(`/ressources/${id}`);
+    return response.data;
+  }
+};
+
+// Service pour les images du menu (si nécessaire)
+export const menuService = {
+  // URLs des images du menu
+  getMenuImages: () => ({
+    carte: 'http://localhost:3000/images/menu/carte.png',
+    ressources: 'http://localhost:3000/images/menu/resources.png',
+    batiments: 'http://localhost:3000/images/menu/batiments.png'
+  })
+}; 
