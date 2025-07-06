@@ -4,7 +4,7 @@ const niveauBatimentSchema = new mongoose.Schema({
   nom: {
     type: String,
     required: true,
-    enum: ['Bureau', 'Usine', 'Dépôt', 'Centrale', 'Marché', 'Atelier', 'Banque']
+    enum: ['Bureau', 'Usine', 'Dépôt', 'Centrale', 'Épicerie', 'Atelier', 'Banque']
   },
   image: {
     type: String,

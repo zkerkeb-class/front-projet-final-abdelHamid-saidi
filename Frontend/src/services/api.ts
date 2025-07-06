@@ -83,26 +83,8 @@ export const batimentService = {
   }
 };
 
-// Services pour les ressources
-export const ressourceService = {
-  // Récupérer toutes les ressources
-  getAllRessources: async () => {
-    const response = await api.get('/ressources');
-    return response.data;
-  },
-
-  // Récupérer les ressources par type
-  getRessourcesByType: async (type: string) => {
-    const response = await api.get(`/ressources/type/${type}`);
-    return response.data;
-  },
-
-  // Récupérer une ressource par ID
-  getRessourceById: async (id: string) => {
-    const response = await api.get(`/ressources/${id}`);
-    return response.data;
-  }
-};
+// Services pour les ressources (déplacé vers ressourceService.ts)
+// Les méthodes sont maintenant disponibles via ressourceService
 
 // Service pour les images du menu (si nécessaire)
 export const menuService = {

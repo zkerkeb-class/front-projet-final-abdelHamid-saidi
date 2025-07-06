@@ -17,7 +17,7 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     if (joueur) {
-      navigate('/dashboard');
+      navigate('/');
     }
   }, [joueur, navigate]);
 

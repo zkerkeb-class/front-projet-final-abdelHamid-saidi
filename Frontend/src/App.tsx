@@ -18,11 +18,11 @@ const App: React.FC = () => {
           <Route path="/register" element={<Register />} />
           
           {/* Routes protégées */}
-          <Route path="/dashboard" element={
+          {/* <Route path="/dashboard" element={
             <PrivateRoute>
               <Dashboard />
             </PrivateRoute>
-          }/>
+          }/> */}
           <Route path="/" element={
             <PrivateRoute>
               <Main />

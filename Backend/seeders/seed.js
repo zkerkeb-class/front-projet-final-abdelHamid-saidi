@@ -149,10 +149,10 @@ const seedData = async () => {
         ]
       },
       {
-        nom: 'Epicerie',
+        nom: 'Épicerie',
         niveau: 1,
-        image: '/images/batiments/epicerie/1.png',
-        description: 'Epicerie de base pour la gestion',
+        image: '/images/batiments/Epicerie/1.png',
+        description: 'Épicerie de base pour le commerce',
         coutBase: 1500,
         coutAmelioration: 600,
         ressourcesAmelioration: [
@@ -161,10 +161,10 @@ const seedData = async () => {
         ]
       },
       {
-        nom: 'Epicerie',
+        nom: 'Épicerie',
         niveau: 2,
-        image: '/images/batiments/epicerie/2.png',
-        description: 'Epicerie de base pour la gestion',
+        image: '/images/batiments/Epicerie/2.png',
+        description: 'Épicerie améliorée pour le commerce',
         coutAmelioration: 600,
         ressourcesAmelioration: [
           { ressourceId: ressourcesCreees[0]._id, quantite: 8 },
