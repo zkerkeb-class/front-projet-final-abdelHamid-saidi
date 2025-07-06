@@ -12,7 +12,7 @@ BizTown est un jeu de simulation économique où vous devez :
 
 ## 🎥 Présentation Vidéo
 
-📺 **[Voir la présentation vidéo du projet](./Ressource/pres.webm)**
+📺 **[Voir la présentation vidéo du projet](https://drive.google.com/file/d/1K1iXDYa1lFOmEacXorbxl5CALpdNw4xR/view?usp=drive_link)**
 
 ## ✨ Fonctionnalités
 
