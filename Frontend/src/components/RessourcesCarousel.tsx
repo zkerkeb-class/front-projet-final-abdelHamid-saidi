@@ -45,8 +45,8 @@ const RessourcesCarousel: React.FC<RessourcesCarouselProps> = ({
     <div className="swiper-container">
       <Swiper
         modules={[Navigation, Pagination]}
-        spaceBetween={20}
-        slidesPerView={4}
+        spaceBetween={60}
+        slidesPerView={3}
         navigation={{
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev',
@@ -58,19 +58,23 @@ const RessourcesCarousel: React.FC<RessourcesCarouselProps> = ({
         breakpoints={{
           320: {
             slidesPerView: 1,
-            spaceBetween: 10,
+            spaceBetween: 30,
           },
           768: {
             slidesPerView: 2,
-            spaceBetween: 15,
-          },
-          1024: {
-            slidesPerView: 3,
-            spaceBetween: 20,
+            spaceBetween: 40,
           },
           1200: {
+            slidesPerView: 3,
+            spaceBetween: 50,
+          },
+          1400: {
+            slidesPerView: 3,
+            spaceBetween: 60,
+          },
+          1600: {
             slidesPerView: 4,
-            spaceBetween: 20,
+            spaceBetween: 60,
           },
         }}
         className="ressources-swiper"

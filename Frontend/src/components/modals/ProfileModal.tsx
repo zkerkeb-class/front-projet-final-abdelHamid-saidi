@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import authService from '../../services/authService';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/ProfileModal.css';
 
 interface ProfileModalProps {
@@ -8,24 +10,34 @@ interface ProfileModalProps {
 
 const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
   const [playerData, setPlayerData] = useState({
-    username: 'Olga#1G5FH86',
-    level: 37,
-    experience: 70,
-    coins: 144766,
-    diamonds: 2429,
-    email: 'olga@example.com',
-    joinDate: '15 Janvier 2024',
-    totalPlayTime: '156h 23m',
-    achievements: 24,
-    rank: 'Gold',
-    energy: 85,
-    maxEnergy: 100,
-    population: 1200,
-    maxPopulation: 1500
+    pseudo: '',
+    email: '',
+    patrimoine: 0,
+    classement: 0
   });
 
   const [formData, setFormData] = useState(playerData);
+
+  useEffect(() => {
+    // Récupérer les vraies données du joueur connecté
+    const currentJoueur = authService.getCurrentJoueur();
+    if (currentJoueur) {
+      setPlayerData({
+        pseudo: currentJoueur.pseudo,
+        email: currentJoueur.email,
+        patrimoine: currentJoueur.patrimoine,
+        classement: currentJoueur.classement
+      });
+      setFormData({
+        pseudo: currentJoueur.pseudo,
+        email: currentJoueur.email,
+        patrimoine: currentJoueur.patrimoine,
+        classement: currentJoueur.classement
+      });
+    }
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,9 +47,17 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
     }));
   };
 
-  const handleSave = () => {
-    setPlayerData(formData);
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      await authService.updateProfile({
+        pseudo: formData.pseudo,
+        email: formData.email
+      });
+      setPlayerData(formData);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour:', error);
+    }
   };
 
   const handleCancel = () => {
@@ -45,34 +65,40 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
     setIsEditing(false);
   };
 
+  const handleLogout = () => {
+    authService.logout();
+    onClose();
+    navigate('/login');
+  };
+
+  const handleDeleteAccount = () => {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
+      // TODO: Implémenter la suppression de compte
+      console.log('Suppression de compte');
+      authService.logout();
+      onClose();
+      navigate('/login');
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
     <div className="profile-modal-overlay" onClick={onClose}>
       <div className="profile-modal" onClick={(e) => e.stopPropagation()}>
-        {/* Header style Clash of Clans */}
+        {/* Header moderne */}
         <div className="modal-header">
-          <div className="header-decoration">
-            <div className="header-gems">
-              <div className="gem gem-red"></div>
-              <div className="gem gem-blue"></div>
-              <div className="gem gem-green"></div>
-            </div>
+          <div className="header-content">
             <div className="header-title">
               <h2>PROFIL DU JOUEUR</h2>
             </div>
-            <div className="header-gems">
-              <div className="gem gem-green"></div>
-              <div className="gem gem-blue"></div>
-              <div className="gem gem-red"></div>
-            </div>
+            <button className="close-button" onClick={onClose}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
           </div>
-          <button className="close-button" onClick={onClose}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
         </div>
 
         {/* Contenu principal */}
@@ -88,18 +114,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
                     className="profile-avatar"
                   />
                 </div>
-                <div className="level-badge">
-                  <span>{playerData.level}</span>
-                </div>
               </div>
-              {isEditing && (
-                <button className="avatar-edit-btn">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                  </svg>
-                </button>
-              )}
             </div>
 
             <div className="hero-info">
@@ -107,176 +122,68 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
                 {isEditing ? (
                   <input
                     type="text"
-                    name="username"
-                    value={formData.username}
+                    name="pseudo"
+                    value={formData.pseudo}
                     onChange={handleInputChange}
                     className="username-input"
                     placeholder="Nom d'utilisateur"
                   />
                 ) : (
-                  <h1 className="username">{playerData.username}</h1>
+                  <h1 className="username">{playerData.pseudo}</h1>
                 )}
-                <div className="rank-badge">
-                  <div className="rank-icon">👑</div>
-                  <span>{playerData.rank}</span>
-                </div>
               </div>
 
-              <div className="xp-section">
-                <div className="xp-info">
-                  <span className="xp-label">EXPÉRIENCE</span>
-                  <span className="xp-percentage">{playerData.experience}%</span>
-                </div>
-                <div className="xp-bar">
-                  <div className="xp-bar-bg">
-                    <div 
-                      className="xp-fill" 
-                      style={{ width: `${playerData.experience}%` }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Section Statistiques */}
-          <div className="stats-section">
-            <div className="section-header">
-              <div className="section-icon">💰</div>
-              <h3>RESSOURCES</h3>
-            </div>
-            
-            <div className="stats-grid">
-              <div className="stat-card coins-card">
-                <div className="stat-icon">
-                  <div className="coin-icon">🪙</div>
-                </div>
-                <div className="stat-content">
-                  <span className="stat-value">{playerData.coins.toLocaleString()}</span>
-                  <span className="stat-label">PIÈCES</span>
-                </div>
-              </div>
-
-              <div className="stat-card gems-card">
-                <div className="stat-icon">
-                  <div className="gem-icon">💎</div>
-                </div>
-                <div className="stat-content">
-                  <span className="stat-value">{playerData.diamonds.toLocaleString()}</span>
-                  <span className="stat-label">DIAMANTS</span>
-                </div>
-              </div>
-
-              <div className="stat-card achievements-card">
-                <div className="stat-icon">
-                  <div className="trophy-icon">🏆</div>
-                </div>
-                <div className="stat-content">
-                  <span className="stat-value">{playerData.achievements}</span>
-                  <span className="stat-label">SUCCÈS</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Section Jauges */}
-          <div className="gauges-section">
-            <div className="section-header">
-              <div className="section-icon">⚡</div>
-              <h3>JAUGE</h3>
-            </div>
-            
-            <div className="gauges-grid">
-              <div className="gauge-card energy-card">
-                <div className="gauge-header">
-                  <div className="gauge-icon">
-                    <div className="energy-icon">⚡</div>
-                  </div>
-                  <span className="gauge-label">ÉNERGIE</span>
-                  <span className="gauge-value">{playerData.energy}/{playerData.maxEnergy}</span>
-                </div>
-                <div className="gauge-bar">
-                  <div className="gauge-bg">
-                    <div 
-                      className="gauge-fill energy-fill" 
-                      style={{ width: `${(playerData.energy / playerData.maxEnergy) * 100}%` }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="gauge-card population-card">
-                <div className="gauge-header">
-                  <div className="gauge-icon">
-                    <div className="population-icon">👥</div>
-                  </div>
-                  <span className="gauge-label">POPULATION</span>
-                  <span className="gauge-value">{playerData.population}/{playerData.maxPopulation}</span>
-                </div>
-                <div className="gauge-bar">
-                  <div className="gauge-bg">
-                    <div 
-                      className="gauge-fill population-fill" 
-                      style={{ width: `${(playerData.population / playerData.maxPopulation) * 100}%` }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Section Informations détaillées */}
-          <div className="details-section">
-            <div className="section-header">
-              <div className="section-icon">📋</div>
-              <h3>INFORMATIONS</h3>
-            </div>
-            
-            <div className="details-grid">
-              <div className="detail-item">
-                <div className="detail-icon">
-                  <div className="email-icon">📧</div>
-                </div>
-                <div className="detail-content">
-                  <span className="detail-label">EMAIL</span>
+              {/* Email à côté de l'image */}
+              <div className="email-section-inline">
+                <div className="email-content-inline">
                   {isEditing ? (
                     <input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="detail-input"
+                      className="email-input-inline"
                       placeholder="Email"
                     />
                   ) : (
-                    <span className="detail-value">{playerData.email}</span>
+                    <span className="email-value-inline">{playerData.email}</span>
                   )}
-                </div>
-              </div>
-
-              <div className="detail-item">
-                <div className="detail-icon">
-                  <div className="calendar-icon">📅</div>
-                </div>
-                <div className="detail-content">
-                  <span className="detail-label">INSCRIPTION</span>
-                  <span className="detail-value">{playerData.joinDate}</span>
-                </div>
-              </div>
-
-              <div className="detail-item">
-                <div className="detail-icon">
-                  <div className="clock-icon">⏰</div>
-                </div>
-                <div className="detail-content">
-                  <span className="detail-label">TEMPS DE JEU</span>
-                  <span className="detail-value">{playerData.totalPlayTime}</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Section Actions */}
+          {/* Section INFO avec patrimoine et classement */}
+          <div className="info-section">
+            <div className="section-header">
+              <div className="section-icon">ℹ️</div>
+              <h3>INFO</h3>
+            </div>
+            
+            <div className="info-grid">
+              <div className="info-card patrimoine-card">
+                <div className="info-icon">
+                  <div className="patrimoine-icon">💰</div>
+                </div>
+                <div className="info-content">
+                  <span className="info-value">{playerData.patrimoine.toLocaleString()}</span>
+                  <span className="info-label">PATRIMOINE</span>
+                </div>
+              </div>
+
+              <div className="info-card classement-card">
+                <div className="info-icon">
+                  <div className="classement-icon">🏆</div>
+                </div>
+                <div className="info-content">
+                  <span className="info-value">#{playerData.classement}</span>
+                  <span className="info-label">CLASSEMENT</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section Actions - Trois boutons alignés */}
           <div className="actions-section">
             {isEditing ? (
               <div className="edit-actions">
@@ -295,9 +202,13 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
                   <div className="btn-icon">✏️</div>
                   MODIFIER
                 </button>
-                <button className="btn btn-secondary">
-                  <div className="btn-icon">📊</div>
-                  STATISTIQUES
+                <button className="btn btn-logout" onClick={handleLogout}>
+                  <div className="btn-icon">🚪</div>
+                  DÉCONNEXION
+                </button>
+                <button className="btn btn-delete" onClick={handleDeleteAccount}>
+                  <div className="btn-icon">🗑️</div>
+                  SUPPRIMER
                 </button>
               </div>
             )}
