@@ -1,25 +1,102 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
-import { RessourceGrouped, Ressource } from '../services/ressourceService';
 import CardImage from './CardImage';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import '../styles/Modals.css';
 
-interface RessourcesCarouselProps {
-  ressourcesGrouped: RessourceGrouped[];
-  onRessourceClick: (ressource: Ressource) => void;
+interface Ressource {
+  id: string;
+  nom: string;
+  description: string;
+  image: string;
+  quantite: number;
+  unite: string;
 }
 
-const RessourcesCarousel: React.FC<RessourcesCarouselProps> = ({ 
-  ressourcesGrouped, 
-  onRessourceClick 
-}) => {
-  const allRessources = ressourcesGrouped.flatMap(group => group.ressources);
+interface MesRessourcesCarouselProps {
+  onRessourceClick?: (ressource: Ressource) => void;
+}
 
-  if (allRessources.length === 0) {
+const MesRessourcesCarousel: React.FC<MesRessourcesCarouselProps> = ({ onRessourceClick }) => {
+  const ressources: Ressource[] = [
+    {
+      id: 'bois',
+      nom: 'Bois',
+      description: 'Matière première essentielle pour la construction de bâtiments et d\'objets.',
+      image: '/arbre1.png',
+      quantite: 1250,
+      unite: 'unités'
+    },
+    {
+      id: 'pierre',
+      nom: 'Pierre',
+      description: 'Matériau de construction solide utilisé pour les fondations et les structures.',
+      image: '/pierre.png',
+      quantite: 850,
+      unite: 'unités'
+    },
+    {
+      id: 'fer',
+      nom: 'Fer',
+      description: 'Métal précieux utilisé pour les outils et les constructions avancées.',
+      image: '/pierre.png',
+      quantite: 320,
+      unite: 'unités'
+    },
+    {
+      id: 'or',
+      nom: 'Or',
+      description: 'Métal précieux rare utilisé pour les améliorations de haut niveau.',
+      image: '/pierre.png',
+      quantite: 45,
+      unite: 'unités'
+    },
+    {
+      id: 'electricite',
+      nom: 'Électricité',
+      description: 'Énergie nécessaire au fonctionnement des bâtiments modernes.',
+      image: '/pierre.png',
+      quantite: 150,
+      unite: 'kW/h'
+    },
+    {
+      id: 'eau',
+      nom: 'Eau',
+      description: 'Ressource vitale pour la population et les processus industriels.',
+      image: '/pierre.png',
+      quantite: 200,
+      unite: 'litres'
+    },
+    {
+      id: 'nourriture',
+      nom: 'Nourriture',
+      description: 'Alimentation nécessaire pour maintenir la population en bonne santé.',
+      image: '/pierre.png',
+      quantite: 180,
+      unite: 'unités'
+    },
+    {
+      id: 'produits',
+      nom: 'Produits',
+      description: 'Biens manufacturés produits par les usines pour la consommation.',
+      image: '/pierre.png',
+      quantite: 95,
+      unite: 'unités'
+    },
+    {
+      id: 'revenus',
+      nom: 'Revenus',
+      description: 'Monnaie générée par les activités commerciales et industrielles.',
+      image: '/pierre.png',
+      quantite: 1250,
+      unite: 'pièces'
+    }
+  ];
+
+  if (ressources.length === 0) {
     return (
       <div className="flex items-center justify-center h-32">
         <p className="text-gray-500">Aucune ressource disponible</p>
@@ -71,14 +148,14 @@ const RessourcesCarousel: React.FC<RessourcesCarouselProps> = ({
             spaceBetween: 15,
           },
         }}
-        className="ressources-swiper"
+        className="mes-ressources-swiper"
         watchSlidesProgress={true}
       >
-        {allRessources.map((ressource) => (
-          <SwiperSlide key={ressource._id}>
+        {ressources.map((ressource) => (
+          <SwiperSlide key={ressource.id}>
             <div
               className="resource-card uniform-size"
-              onClick={() => onRessourceClick(ressource)}
+              onClick={() => onRessourceClick?.(ressource)}
             >
               <div className="card-content">
                 <CardImage
@@ -93,14 +170,12 @@ const RessourcesCarousel: React.FC<RessourcesCarouselProps> = ({
                 
                 <div className="card-info">
                   <h3 className="card-title">{ressource.nom}</h3>
-                  {ressource.description && (
-                    <p className="card-description">{ressource.description}</p>
-                  )}
+                  <p className="card-description">{ressource.description}</p>
                   
                   <div className="card-quantity">
                     <span className="quantity-label">Quantité</span>
                     <span className="quantity-value">
-                      {Math.floor(Math.random() * 1000) + 100} unités
+                      {ressource.quantite.toLocaleString()} {ressource.unite}
                     </span>
                   </div>
                 </div>
@@ -120,4 +195,4 @@ const RessourcesCarousel: React.FC<RessourcesCarouselProps> = ({
   );
 };
 
-export default RessourcesCarousel; 
+export default MesRessourcesCarousel; 

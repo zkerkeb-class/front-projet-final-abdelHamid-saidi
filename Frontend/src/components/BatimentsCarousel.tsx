@@ -2,6 +2,7 @@ import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import { BatimentGrouped } from '../services/batimentService';
+import CardImage from './CardImage';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -25,8 +26,8 @@ const BatimentsCarousel: React.FC<BatimentsCarouselProps> = ({ batiments, onBati
     <div className="swiper-container">
       <Swiper
         modules={[Navigation, Pagination]}
-        spaceBetween={60}
-        slidesPerView={3}
+        spaceBetween={15}
+        slidesPerView={4}
         navigation={{
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev',
@@ -38,26 +39,35 @@ const BatimentsCarousel: React.FC<BatimentsCarouselProps> = ({ batiments, onBati
         breakpoints={{
           320: {
             slidesPerView: 1,
-            spaceBetween: 30,
+            spaceBetween: 10,
+          },
+          480: {
+            slidesPerView: 2,
+            spaceBetween: 12,
           },
           768: {
-            slidesPerView: 2,
-            spaceBetween: 40,
+            slidesPerView: 3,
+            spaceBetween: 15,
+          },
+          1024: {
+            slidesPerView: 4,
+            spaceBetween: 15,
           },
           1200: {
-            slidesPerView: 3,
-            spaceBetween: 50,
+            slidesPerView: 4,
+            spaceBetween: 15,
           },
           1400: {
-            slidesPerView: 3,
-            spaceBetween: 60,
+            slidesPerView: 4,
+            spaceBetween: 15,
           },
           1600: {
             slidesPerView: 4,
-            spaceBetween: 60,
+            spaceBetween: 15,
           },
         }}
         className="batiments-swiper"
+        watchSlidesProgress={true}
       >
         {batiments.map((batiment) => (
           <SwiperSlide key={batiment.nom}>
@@ -66,17 +76,15 @@ const BatimentsCarousel: React.FC<BatimentsCarouselProps> = ({ batiments, onBati
               onClick={() => onBatimentClick(batiment)}
             >
               <div className="card-content">
-                <div className="card-image-container">
-                  <img
-                    src={batiment.image}
-                    alt={batiment.nom}
-                    className="card-image"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = '/placeholder-building.png';
-                    }}
-                  />
-                </div>
+                <CardImage
+                  src={batiment.image}
+                  alt={batiment.nom}
+                  fallbackSrc="/placeholder-building.png"
+                  aspectRatio="square"
+                  showShimmer={true}
+                  onLoad={() => console.log(`Image chargée: ${batiment.nom}`)}
+                  onError={() => console.log(`Erreur de chargement: ${batiment.nom}`)}
+                />
                 <div className="card-info">
                   <h3 className="card-title">{batiment.nom}</h3>
                   <p className="card-description">

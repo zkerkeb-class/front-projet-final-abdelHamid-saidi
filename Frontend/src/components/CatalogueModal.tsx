@@ -4,6 +4,7 @@ import { productionService, ProductionData } from '../services/productionService
 import { ressourceService, RessourceGrouped, Ressource } from '../services/ressourceService';
 import BatimentsCarousel from './BatimentsCarousel';
 import RessourcesCarousel from './RessourcesCarousel';
+import CardImage from './CardImage';
 import '../styles/Modals.css';
 
 interface CatalogueModalProps {
@@ -90,10 +91,14 @@ const CatalogueModal: React.FC<CatalogueModalProps> = ({ isOpen, onClose }) => {
       <div key={niveau._id} className="resource-card">
         {/* En-tête du niveau avec image et titre */}
         <div className="card-header">
-          <img
+          <CardImage
             src={`http://localhost:3000${niveau.image}`}
             alt={`${selectedBatiment?.nom} niveau ${niveau.niveau}`}
-            className="card-image"
+            fallbackSrc="/placeholder-building.png"
+            aspectRatio="square"
+            showShimmer={true}
+            onLoad={() => console.log(`Image chargée: ${selectedBatiment?.nom} niveau ${niveau.niveau}`)}
+            onError={() => console.log(`Erreur de chargement: ${selectedBatiment?.nom} niveau ${niveau.niveau}`)}
           />
           <div>
             <h4 className="card-title">Niveau {niveau.niveau}</h4>
@@ -201,14 +206,14 @@ const CatalogueModal: React.FC<CatalogueModalProps> = ({ isOpen, onClose }) => {
     return (
       <div className="space-y-6">
         <div className="resource-detail-header">
-          <img
+          <CardImage
             src={`http://localhost:3000${selectedRessource.image}`}
             alt={selectedRessource.nom}
-            className="resource-detail-image"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = '/placeholder-resource.png';
-            }}
+            fallbackSrc="/placeholder-resource.png"
+            aspectRatio="square"
+            showShimmer={true}
+            onLoad={() => console.log(`Image chargée: ${selectedRessource.nom}`)}
+            onError={() => console.log(`Erreur de chargement: ${selectedRessource.nom}`)}
           />
           <div className="resource-detail-info">
             <h3 className="resource-detail-name">{selectedRessource.nom}</h3>

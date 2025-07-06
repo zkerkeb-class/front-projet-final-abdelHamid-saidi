@@ -5,6 +5,7 @@ import NavigationButtons from '../components/NavigationButtons';
 import BatimentsModal from '../components/BatimentsModal';
 import RessourcesModal from '../components/RessourcesModal';
 import CatalogueModal from '../components/CatalogueModal';
+import CityGrid from '../components/CityGrid';
 
 export default function Main() {
   const [activeView, setActiveView] = useState<'carte' | 'batiment' | 'ressources' | 'catalogue'>('carte');
@@ -34,6 +35,15 @@ export default function Main() {
     }
   };
 
+  const handleCityTileClick = (tile: any) => {
+    console.log('Case de ville cliquée:', tile);
+    // Ici vous pouvez ajouter la logique pour construire des bâtiments
+  };
+
+  const handleCityTileHover = (tile: any) => {
+    console.log('Case de ville survolée:', tile);
+  };
+
   return (
     <div className="min-h-screen relative overflow-hidden" style={{ background: 'none' }}>
       {/* Header fixe */}
@@ -43,6 +53,12 @@ export default function Main() {
       <div className="pt-16">
         <BackgroundTerrain />
       </div>
+
+      {/* Grille de ville isométrique - centrée sur la page */}
+      <CityGrid 
+        onTileClick={handleCityTileClick}
+        onTileHover={handleCityTileHover}
+      />
 
       {/* Boutons de navigation */}
       <NavigationButtons 

@@ -1,5 +1,6 @@
 import React from 'react';
 import '../styles/Modals.css';
+import MesRessourcesCarousel from './MesRessourcesCarousel';
 
 interface Ressource {
   id: string;
@@ -93,11 +94,16 @@ interface RessourcesModalProps {
 const RessourcesModal: React.FC<RessourcesModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
+  const handleRessourceClick = (ressource: Ressource) => {
+    console.log('Ressource cliquée:', ressource);
+    // Ici vous pouvez ajouter une logique pour afficher plus de détails sur la ressource
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-container" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2 className="modal-title">RESSOURCES</h2>
+          <h2 className="modal-title">MES RESSOURCES</h2>
           <button className="modal-close-button" onClick={onClose}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
               <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -107,29 +113,8 @@ const RessourcesModal: React.FC<RessourcesModalProps> = ({ isOpen, onClose }) =>
         </div>
         
         <div className="modal-content">
-          <div className="resources-grid">
-            {ressources.map((ressource) => (
-              <div key={ressource.id} className="resource-card">
-                <div className="card-header">
-                  <img
-                    src={ressource.image}
-                    alt={ressource.nom}
-                    className="card-image"
-                  />
-                  <div>
-                    <h3 className="card-title">{ressource.nom}</h3>
-                    <p className="card-description">{ressource.description}</p>
-                  </div>
-                </div>
-                
-                <div className="card-quantity">
-                  <span className="quantity-label">Quantité</span>
-                  <span className="quantity-value">
-                    {ressource.quantite.toLocaleString()} {ressource.unite}
-                  </span>
-                </div>
-              </div>
-            ))}
+          <div className="carousel-section">
+            <MesRessourcesCarousel onRessourceClick={handleRessourceClick} />
           </div>
           
           <div className="tips-section">

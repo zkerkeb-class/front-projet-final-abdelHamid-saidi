@@ -3,6 +3,7 @@ import { batimentService, BatimentGrouped, NiveauBatiment } from '../services/ba
 import { productionService, ProductionData } from '../services/productionService';
 import BatimentsCarousel from './BatimentsCarousel';
 import '../styles/Modals.css';
+import CardImage from './CardImage';
 
 interface BatimentsModalProps {
   isOpen: boolean;
@@ -27,8 +28,50 @@ const BatimentsModal: React.FC<BatimentsModalProps> = ({ isOpen, onClose }) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await batimentService.getBatimentsPossedes();
-      setBatiments(data);
+      // Bâtiments disponibles (sans API)
+      const batimentsDisponibles: BatimentGrouped[] = [
+        {
+          nom: 'Bureau',
+          niveaux: [],
+          image: 'http://localhost:3000/images/batiments/bureau/1.png',
+          description: 'Bureau de base pour la gestion'
+        },
+        {
+          nom: 'Usine',
+          niveaux: [],
+          image: 'http://localhost:3000/images/batiments/usine/1.png',
+          description: 'Usine de production basique'
+        },
+        {
+          nom: 'Épicerie',
+          niveaux: [],
+          image: 'http://localhost:3000/images/batiments/Epicerie/1.png',
+          description: 'Épicerie de base pour le commerce'
+        },
+        {
+          nom: 'Centrale',
+          niveaux: [],
+          image: 'http://localhost:3000/images/batiments/centrale/1.png',
+          description: 'Centrale électrique'
+        }
+      ];
+      
+      // Sélectionner deux bâtiments aléatoires
+      const batimentsAleatoires: BatimentGrouped[] = [];
+      const indicesUtilises = new Set<number>();
+      
+      while (batimentsAleatoires.length < 2) {
+        const indexAleatoire = Math.floor(Math.random() * batimentsDisponibles.length);
+        if (!indicesUtilises.has(indexAleatoire)) {
+          indicesUtilises.add(indexAleatoire);
+          batimentsAleatoires.push(batimentsDisponibles[indexAleatoire]);
+        }
+      }
+      
+      // Utiliser directement les bâtiments aléatoires comme liste personnelle
+      setBatiments(batimentsAleatoires);
+      
+      console.log('Bâtiments aléatoires ajoutés à votre liste:', batimentsAleatoires.map(b => b.nom));
     } catch (err) {
       setError('Erreur lors du chargement de vos bâtiments');
       console.error('Erreur lors du chargement de vos bâtiments:', err);
@@ -56,10 +99,14 @@ const BatimentsModal: React.FC<BatimentsModalProps> = ({ isOpen, onClose }) => {
       <div key={niveau._id} className="resource-card">
         {/* En-tête du niveau avec image et titre */}
         <div className="card-header">
-          <img
+          <CardImage
             src={`http://localhost:3000${niveau.image}`}
             alt={`${selectedBatiment?.nom} niveau ${niveau.niveau}`}
-            className="card-image"
+            fallbackSrc="/placeholder-building.png"
+            aspectRatio="square"
+            showShimmer={true}
+            onLoad={() => console.log(`Image chargée: ${selectedBatiment?.nom} niveau ${niveau.niveau}`)}
+            onError={() => console.log(`Erreur de chargement: ${selectedBatiment?.nom} niveau ${niveau.niveau}`)}
           />
           <div>
             <h4 className="card-title">Niveau {niveau.niveau}</h4>
