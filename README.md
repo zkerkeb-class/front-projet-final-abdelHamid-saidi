@@ -10,10 +10,6 @@ BizTown est un jeu de simulation économique où vous devez :
 - **Développer** votre ville sur une grille hexagonale
 - **Optimiser** votre production et commerce
 
-## 🎥 Présentation Vidéo
-
-📺 **[Voir la présentation vidéo du projet](https://drive.google.com/file/d/1K1iXDYa1lFOmEacXorbxl5CALpdNw4xR/view?usp=drive_link)**
-
 ## ✨ Fonctionnalités
 
 ### 🏗️ Système de Construction
