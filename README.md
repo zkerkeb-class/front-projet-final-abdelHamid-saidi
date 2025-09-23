@@ -2,7 +2,7 @@
 
 Un jeu de gestion de ville moderne développé avec React et Node.js, où vous construisez et gérez votre empire commercial.
 
-## 🎮 Présentation
+## Présentation
 
 BizTown est un jeu de simulation économique où vous devez :
 - **Construire** des bâtiments (Bureau, Usine, Épicerie, Centrale)
@@ -10,27 +10,27 @@ BizTown est un jeu de simulation économique où vous devez :
 - **Développer** votre ville sur une grille hexagonale
 - **Optimiser** votre production et commerce
 
-## ✨ Fonctionnalités
+## Fonctionnalités
 
-### 🏗️ Système de Construction
+### Système de Construction
 - Grille de ville interactive en forme de losange
 - 4 types de bâtiments disponibles
 - Placement stratégique des constructions
 - Système de niveaux d'amélioration
 
-### 💰 Gestion Économique
+### Gestion Économique
 - Système de ressources multiples
 - Production et consommation automatiques
 - Catalogue d'achat de bâtiments
 - Patrimoine et classement des joueurs
 
-### 👤 Système de Joueurs
+### Système de Joueurs
 - Inscription et connexion sécurisées
 - Profils personnalisés avec avatars
 - Classement et expérience
 - Sauvegarde des progrès
 
-## 🛠️ Technologies Utilisées
+## Technologies Utilisées
 
 ### Frontend
 - **React 18** avec TypeScript
@@ -44,7 +44,7 @@ BizTown est un jeu de simulation économique où vous devez :
 - **JWT** pour l'authentification
 - **Swagger** pour la documentation API
 
-## 🚀 Installation et Lancement
+## Installation et Lancement
 
 ### Prérequis
 - Node.js (v16+)
@@ -94,7 +94,7 @@ Frontend: http://localhost:5173
 API: http://localhost:3000
 ```
 
-## 🎯 Comptes de Test
+## Comptes de Test
 
 ```
 Email: hamid@biztown.com | Mot de passe: password123
@@ -102,7 +102,7 @@ Email: alice@biztown.com  | Mot de passe: azerty
 Email: bob@biztown.com    | Mot de passe: testpass
 ```
 
-## 📁 Structure du Projet
+## Structure du Projet
 
 ```
 front-projet-final/
@@ -121,7 +121,7 @@ front-projet-final/
 └── Ressource/              # Assets et documentation
 ```
 
-## 🎮 Comment Jouer
+## Comment Jouer
 
 1. **Créer un compte** ou vous connecter
 2. **Explorer la carte** de votre ville
@@ -130,14 +130,14 @@ front-projet-final/
 5. **Gérer vos ressources** dans l'onglet dédié
 6. **Améliorer vos bâtiments** pour augmenter la production
 
-## 🔧 API Endpoints
+## API Endpoints
 
 - `GET /api/joueurs` - Liste des joueurs
 - `GET /api/niveaux-batiments` - Types de bâtiments
 - `POST /api/possession-batiments` - Construire un bâtiment
 - `GET /api/ressources` - Ressources disponibles
 
-## 📊 Fonctionnalités Avancées
+## Fonctionnalités Avancées
 
 - **Système de production** automatique des ressources
 - **Besoins en ressources** pour les améliorations
@@ -145,19 +145,12 @@ front-projet-final/
 - **Animations fluides** et transitions
 - **Gestion d'état** avec React Context
 
-## 🤝 Contribution
+## Contribution
 
 Les contributions sont les bienvenues ! N'hésitez pas à :
 - Signaler des bugs
 - Proposer des améliorations
 - Ajouter de nouvelles fonctionnalités
 
-## 📄 Licence
-
-Ce projet est sous licence MIT.
-
----
-
-**Développé pour l'apprentissage du développement web moderne**
 
 *BizTown - Construisez votre empire commercial !* 
