@@ -1,0 +1,31 @@
+:root {
+    --primary: #5adaff;
+    --primary-dark: #5468ff;
+    --secondary: #3a416f80;
+    --tertiary: #ffe066;
+    --quaternary: #43e660;
+    --quinary: #1b8f2a;
+    --senary: #0e2c5a;
+    --septenary: #fff;
+    --octonary: #000;
+    --nonary: #c84b31;
+    
+    /* Nouvelles variables pour le header */
+    --primary-light: #2ee6ff;
+    --primary-blue: #1a4fa0;
+    --tertiary-light: #ffb300;
+    --white-transparent-2: rgba(255, 255, 255, 0.2);
+    --white-transparent-3: rgba(255, 255, 255, 0.3);
+    --white-transparent-4: rgba(255, 255, 255, 0.4);
+    --black-transparent-2: rgba(0, 0, 0, 0.2);
+    --black-transparent-3: rgba(0, 0, 0, 0.3);
+    --black-transparent-4: rgba(0, 0, 0, 0.4);
+    --primary-light-transparent-44: rgba(46, 230, 255, 0.44);
+    --primary-light-transparent-55: rgba(46, 230, 255, 0.55);
+    --primary-light-transparent-88: rgba(46, 230, 255, 0.88);
+    --tertiary-transparent-55: rgba(255, 224, 102, 0.55);
+    --tertiary-transparent-88: rgba(255, 224, 102, 0.88);
+    --tertiary-transparent-99: rgba(255, 224, 102, 0.99);
+    --quaternary-transparent-88: rgba(67, 230, 96, 0.88);
+}
+ 

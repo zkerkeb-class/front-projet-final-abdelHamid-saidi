@@ -1,0 +1,316 @@
+/* NavigationButtons - Style Moderne et Beau */
+
+.navigation-buttons {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nav-button {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border: 2px solid #d0d0d0;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  width: 80px;
+  height: 80px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.nav-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 12px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border-color: #4a90e2;
+}
+
+.nav-button.active {
+  background: linear-gradient(145deg, #4a90e2 0%, #357abd 100%);
+  border-color: #2d5aa0;
+  color: white;
+  box-shadow: 
+    0 6px 12px rgba(74, 144, 226, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.nav-button.active:hover {
+  background: linear-gradient(145deg, #5a9ee8 0%, #4a90e2 100%);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 16px rgba(74, 144, 226, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.nav-button.carte.active {
+  background: linear-gradient(145deg, #3b82f6 0%, #2563eb 100%);
+  border-color: #1d4ed8;
+  box-shadow: 
+    0 6px 12px rgba(59, 130, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.nav-button.carte.active:hover {
+  background: linear-gradient(145deg, #60a5fa 0%, #3b82f6 100%);
+  box-shadow: 
+    0 8px 16px rgba(59, 130, 246, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.nav-button.batiment.active {
+  background: linear-gradient(145deg, #10b981 0%, #059669 100%);
+  border-color: #047857;
+  box-shadow: 
+    0 6px 12px rgba(16, 185, 129, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.nav-button.batiment.active:hover {
+  background: linear-gradient(145deg, #34d399 0%, #10b981 100%);
+  box-shadow: 
+    0 8px 16px rgba(16, 185, 129, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.nav-button.ressources.active {
+  background: linear-gradient(145deg, #f59e0b 0%, #d97706 100%);
+  border-color: #b45309;
+  box-shadow: 
+    0 6px 12px rgba(245, 158, 11, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.nav-button.ressources.active:hover {
+  background: linear-gradient(145deg, #fbbf24 0%, #f59e0b 100%);
+  box-shadow: 
+    0 8px 16px rgba(245, 158, 11, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.nav-button.catalogue.active {
+  background: linear-gradient(145deg, #8b5cf6 0%, #7c3aed 100%);
+  border-color: #6d28d9;
+  box-shadow: 
+    0 6px 12px rgba(139, 92, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.nav-button.catalogue.active:hover {
+  background: linear-gradient(145deg, #a78bfa 0%, #8b5cf6 100%);
+  box-shadow: 
+    0 8px 16px rgba(139, 92, 246, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.nav-button-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  transition: all 0.3s ease;
+}
+
+.nav-button.active .nav-button-icon {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.nav-button-text {
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  text-align: center;
+  line-height: 1;
+}
+
+.nav-button:not(.active) .nav-button-text {
+  color: #374151;
+}
+
+.nav-button.active .nav-button-text {
+  color: white;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Animation d'entrée */
+.nav-button {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+.nav-button:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.nav-button:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.nav-button:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.nav-button:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Effet de pulsation pour les boutons actifs */
+.nav-button.active {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 
+      0 6px 12px rgba(74, 144, 226, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 
+      0 6px 12px rgba(74, 144, 226, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 0 20px rgba(74, 144, 226, 0.3);
+  }
+}
+
+.nav-button.carte.active {
+  animation: pulseBlue 2s infinite;
+}
+
+@keyframes pulseBlue {
+  0%, 100% {
+    box-shadow: 
+      0 6px 12px rgba(59, 130, 246, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 
+      0 6px 12px rgba(59, 130, 246, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 0 20px rgba(59, 130, 246, 0.3);
+  }
+}
+
+.nav-button.batiment.active {
+  animation: pulseGreen 2s infinite;
+}
+
+@keyframes pulseGreen {
+  0%, 100% {
+    box-shadow: 
+      0 6px 12px rgba(16, 185, 129, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 
+      0 6px 12px rgba(16, 185, 129, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 0 20px rgba(16, 185, 129, 0.3);
+  }
+}
+
+.nav-button.ressources.active {
+  animation: pulseYellow 2s infinite;
+}
+
+@keyframes pulseYellow {
+  0%, 100% {
+    box-shadow: 
+      0 6px 12px rgba(245, 158, 11, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 
+      0 6px 12px rgba(245, 158, 11, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 0 20px rgba(245, 158, 11, 0.3);
+  }
+}
+
+.nav-button.catalogue.active {
+  animation: pulsePurple 2s infinite;
+}
+
+@keyframes pulsePurple {
+  0%, 100% {
+    box-shadow: 
+      0 6px 12px rgba(139, 92, 246, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 
+      0 6px 12px rgba(139, 92, 246, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 0 20px rgba(139, 92, 246, 0.3);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navigation-buttons {
+    bottom: 15px;
+    left: 15px;
+    gap: 8px;
+  }
+  
+  .nav-button {
+    padding: 12px;
+    width: 70px;
+    height: 70px;
+  }
+  
+  .nav-button-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .nav-button-text {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navigation-buttons {
+    bottom: 10px;
+    left: 10px;
+    gap: 6px;
+  }
+  
+  .nav-button {
+    padding: 10px;
+    width: 60px;
+    height: 60px;
+  }
+  
+  .nav-button-icon {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .nav-button-text {
+    font-size: 0.5rem;
+  }
+} 
